@@ -32,7 +32,7 @@ const Login = () => {
 
                     <div className="mt-4 text-xs text-slate-200">
                         Don&apos;t have an account?
-                        <Link className="underline ml-2" href="/signup">Sign In</Link>
+                        <Link className="underline ml-2" href="/register">Sign In</Link>
                     </div>
                 </div>
                 <div className="relative hidden md:block">

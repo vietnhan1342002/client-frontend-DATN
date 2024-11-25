@@ -1,187 +1,146 @@
 /* eslint-disable @next/next/no-img-element */
-'use client'
+'use client';
 
-import { useState } from 'react'
-import {
-    Dialog,
-    DialogPanel,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Popover,
-    PopoverButton,
-    PopoverGroup,
-    PopoverPanel,
-} from '@headlessui/react'
-import {
-    ArrowPathIcon,
-    Bars3Icon,
-    ChartPieIcon,
-    CursorArrowRaysIcon,
-    FingerPrintIcon,
-    SquaresPlusIcon,
-    XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-
-const products = [
-    { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-    { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-    { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-    { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-    { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-]
-
+import Link from 'next/link';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaPhoneAlt, FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function Navbar() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+    const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     return (
-        <header className="bg-blue-100">
-            <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-                <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
-                        <img
-                            alt=""
-                            src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                            className="h-8 w-auto"
-                        />
-                    </a>
-                </div>
-                <div className="flex lg:hidden">
-                    <button
-                        type="button"
-                        onClick={() => setMobileMenuOpen(true)}
-                        className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                    >
-                        <span className="sr-only">Open main menu</span>
-                        <Bars3Icon aria-hidden="true" className="h-6 w-6" />
-                    </button>
+        <header className="bg-white border-b">
+            {/* Top Navbar */}
+            <div className="max-w-7xl mx-auto flex justify-between items-center py-2 px-4 text-sm text-gray-600">
+                {/* Left Section */}
+                <div className="text-blue-700 font-bold text-base">
+                    PHÒNG KHÁM ĐA KHOA
                 </div>
 
-                <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                        Trang chủ
-                    </a>
-                    <Popover className="relative">
-                        <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-                            Hạng mục điều trị
-                            <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
-                        </PopoverButton>
-
-                        <PopoverPanel
-                            transition
-                            className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-                        >
-                            <div className="p-4">
-                                {products.map((item) => (
-                                    <div
-                                        key={item.name}
-                                        className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
-                                    >
-                                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                            <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
-                                        </div>
-                                        <div className="flex-auto">
-                                            <a href={item.href} className="block font-semibold text-gray-900">
-                                                {item.name}
-                                                <span className="absolute inset-0" />
-                                            </a>
-                                            <p className="mt-1 text-gray-600">{item.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </PopoverPanel>
-                    </Popover>
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                        Đặt lịch khám
-                    </a>
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                        Liên hệ
-                    </a>
-                </PopoverGroup>
-                <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-                        Đăng nhập <span aria-hidden="true">&rarr;</span>
-                    </a>
-                </div>
-            </nav>
-            <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-                <div className="fixed inset-0 z-10" />
-                <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-                    <div className="flex items-center justify-between">
-                        <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Your Company</span>
-                            <img
-                                alt=""
-                                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                                className="h-8 w-auto"
-                            />
-                        </a>
-                        <button
-                            type="button"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="-m-2.5 rounded-md p-2.5 text-gray-700"
-                        >
-                            <span className="sr-only">Close menu</span>
-                            <XMarkIcon aria-hidden="true" className="h-6 w-6" />
-                        </button>
-                    </div>
-                    <div className="mt-6 flow-root">
-                        <div className="-my-6 divide-y divide-gray-500/10">
-                            <div className="space-y-2 py-6">
-                                <Disclosure as="div" className="-mx-3">
-                                    <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                                        Product
-                                        <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
-                                    </DisclosureButton>
-                                    <DisclosurePanel className="mt-2 space-y-2">
-                                        {[...products].map((item) => (
-                                            <DisclosureButton
-                                                key={item.name}
-                                                as="a"
-                                                href={item.href}
-                                                className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                            >
-                                                {item.name}
-                                            </DisclosureButton>
-                                        ))}
-                                    </DisclosurePanel>
-                                </Disclosure>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                >
-                                    Features
-                                </a>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                >
-                                    Marketplace
-                                </a>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                >
-                                    Company
-                                </a>
-                            </div>
-                            <div className="py-6">
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                >
-                                    Log in
-                                </a>
-                            </div>
+                {/* Right Section */}
+                <div className="flex items-center gap-20">
+                    {/* Phone */}
+                    <div className="flex items-center gap-2">
+                        <FaPhoneAlt className="text-blue-500 w-5 h-5" />
+                        <div>
+                            <p className="font-medium text-gray-800">PHONE</p>
+                            <p>0123456789</p>
                         </div>
                     </div>
-                </DialogPanel>
-            </Dialog>
+
+                    {/* Work Hour */}
+                    <div className="flex items-center gap-2">
+                        <FaClock className="text-blue-500 w-5 h-5" />
+                        <div>
+                            <p className="font-medium text-gray-800">WORK HOUR</p>
+                            <p>09:00 - 20:00 Everyday</p>
+                        </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex items-center gap-2">
+                        <FaMapMarkerAlt className="text-blue-500 w-5 h-5" />
+                        <div>
+                            <p className="font-medium text-gray-800">LOCATION</p>
+                            <p>123 VO CHI CONG</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Navbar */}
+            <div className="bg-blue-900 text-white">
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+                    {/* Logo */}
+                    <div className="flex items-center space-x-2">
+                        <img src="/logo.png" alt="ZCARE Logo" className="h-8 w-8 object-contain" />
+                        <h1 className="text-xl font-bold">ZCARE</h1>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="flex gap-8 justify-center">
+                        <a href="#home" className="hover:underline">Home</a>
+                        <a href="#about" className="hover:underline">About us</a>
+
+                        {/* Dropdown for Specialty */}
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                onClick={toggleDropdown}
+                                className="hover:underline flex items-center"
+                            >
+                                Specialty
+                                <svg
+                                    className={`w-4 h-4 ml-1 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+                            {isDropdownOpen && (
+                                <div className="absolute bg-white text-black shadow-lg mt-2 py-2 rounded-md w-48 z-10">
+                                    <a href="#internal" className="block px-4 py-2 hover:bg-gray-100">Nội Khoa</a>
+                                    <a href="#surgery" className="block px-4 py-2 hover:bg-gray-100">Ngoại Khoa</a>
+                                    <a href="#pediatrics" className="block px-4 py-2 hover:bg-gray-100">Nhi Khoa</a>
+                                    <a href="#obstetrics" className="block px-4 py-2 hover:bg-gray-100">Sản Phụ Khoa</a>
+                                    <a href="#dentistry" className="block px-4 py-2 hover:bg-gray-100">Răng Hàm Mặt</a>
+                                    <a href="#dermatology" className="block px-4 py-2 hover:bg-gray-100">Da Liễu</a>
+                                    <a href="#ophthalmology" className="block px-4 py-2 hover:bg-gray-100">Mắt</a>
+                                    <a href="#ent" className="block px-4 py-2 hover:bg-gray-100">Tai Mũi Họng</a>
+                                </div>
+                            )}
+                        </div>
+
+                        <a href="#news" className="hover:underline">News</a>
+                        <a href="/contact" className="hover:underline">Contact</a>
+                    </nav>
+
+                    {/* Search Icon and Appointment Button */}
+                    <div className="flex items-center gap-4">
+                        {/* Search Icon */}
+                        <button className="text-white hover:text-gray-300">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-6 h-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" strokeWidth="2" />
+                            </svg>
+                        </button>
+
+                        {/* Appointment Button */}
+
+                        <Link href="/appointment" className="bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Book An Appointment
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </header>
-    )
+    );
 }

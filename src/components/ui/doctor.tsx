@@ -7,6 +7,7 @@ export default function Doctors() {
         { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-1.jpg" },
         { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-2.jpg" },
         { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-3.jpg" },
+
     ];
 
     return (
@@ -40,12 +41,12 @@ export default function Doctors() {
                     </div>
                 ))}
             </div>
-            {/* Slider Dots */}
+            {/* Slider Dots
             <div className="flex justify-center space-x-2 mt-8 ">
                 <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
                 <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
                 <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
-            </div>
+            </div> */}
         </div>
     );
 }

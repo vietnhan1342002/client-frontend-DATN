@@ -9,8 +9,8 @@ import News from "@/components/ui/new";
 import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
 
-
 export default function Home() {
+
   return (
     <main className="container mx-auto py-6">
       <Banner />

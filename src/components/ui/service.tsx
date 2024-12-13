@@ -4,15 +4,15 @@ import { FaStethoscope, FaProcedures, FaChild, FaTooth, FaHeartbeat, FaEye, FaFi
 
 export default function Service() {
     const services = [
-        { name: "Khám sức khỏe tổng quát", icon: <FaStethoscope /> },
-        { name: "Khám trẻ em", icon: <FaChild /> },
-        { name: "Khám phụ khoa", icon: <FaProcedures /> },
-        { name: "Khám răng miệng", icon: <FaTooth /> },
-        { name: "Khám và điều trị mụn", icon: <FaHeartbeat /> },
-        { name: "Khám mắt", icon: <FaEye /> },
-        { name: "Khám tai, mũi, họng", icon: <FaFileMedical /> },
-        { name: "Xét nghiệm máu", icon: <FaStethoscope /> },
-        { name: "X-quang", icon: <FaXRay /> },
+        { name: "General Health Check-up", icon: <FaStethoscope /> },
+        { name: "Pediatric Check-up", icon: <FaChild /> },
+        { name: "Gynecological Examination", icon: <FaProcedures /> },
+        { name: "Dental Examination", icon: <FaTooth /> },
+        { name: "Acne Treatment", icon: <FaHeartbeat /> },
+        { name: "Eye Examination", icon: <FaEye /> },
+        { name: "ENT (Ear, Nose, Throat) Examination", icon: <FaFileMedical /> },
+        { name: "Blood Test", icon: <FaStethoscope /> },
+        { name: "X-ray", icon: <FaXRay /> },
     ];
 
     return (

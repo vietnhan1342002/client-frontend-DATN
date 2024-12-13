@@ -16,12 +16,14 @@ interface Service {
 interface ServiceState {
     services: Service[];
     loading: boolean;
+    selectedService: string | null;
 }
 
 // Giá trị mặc định của state
 const initialState: ServiceState = {
     services: [],
     loading: false,
+    selectedService: null,
 };
 
 // Tạo slice
@@ -35,9 +37,12 @@ const serviceSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.loading = action.payload;
         },
+        updateSelectedService(state, action: PayloadAction<string>) {
+            state.selectedService = action.payload;
+        },
     },
 });
 
 // Xuất actions và reducer
-export const { setServices, setLoading } = serviceSlice.actions;
+export const { setServices, setLoading, updateSelectedService } = serviceSlice.actions;
 export default serviceSlice.reducer;

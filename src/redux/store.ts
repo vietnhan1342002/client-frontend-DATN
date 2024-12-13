@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import specialtyReducer from './store/specialtySlice';
 import serviceReducer from './store/serviceSlice';
 import departmentReducer from './store/departmentSlice';
+import doctorReducer from './store/doctorSlice';
 
 // Tạo store với reducers
 export const makeStore = () =>
@@ -9,7 +10,8 @@ export const makeStore = () =>
         reducer: {
             specialties: specialtyReducer,
             services: serviceReducer,
-            departments: departmentReducer, // Thêm slice ở đây
+            departments: departmentReducer,
+            doctors: doctorReducer,// Thêm slice ở đây
         },
     });
 

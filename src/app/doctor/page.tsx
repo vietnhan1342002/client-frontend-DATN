@@ -1,13 +1,38 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import BannerDetail from "@/components/ui/bannerdetail";
 import Contact from "@/components/ui/contact";
 import Doctors from "@/components/ui/doctor";
 import Footer from "@/components/ui/footer";
 
+export default function Doctor() {
+    const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-export default function About() {
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            setLoading(true); // Bắt đầu trạng thái loading
+            try {
+                const response = await axios.get('http://13.211.141.240:8080/api/v1/doctors'); // URL API doctors
+                const doctorList = response.data.result; // Giả định API trả về trong `result`
+                console.log("Doctors API Response:", doctorList);
+                setDoctors(doctorList); // Lưu danh sách bác sĩ vào state
+            } catch (err) {
+                console.error('Error fetching doctors:', err);
+            } finally {
+                setLoading(false); // Kết thúc trạng thái loading
+            }
+        };
+
+        fetchDoctors();
+    }, []);
+
+    const handleSelectDoctor = (id: string) => {
+        console.log("Selected doctor ID:", id);
+    };
+
     return (
         <div>
             {/* Banner Section */}
@@ -18,7 +43,13 @@ export default function About() {
             />
 
             <div className="bg-white">
-                <Doctors />
+                {/* Doctors Section */}
+                <Doctors
+                    doctors={doctors}
+                    loading={loading}
+                    onSelectDoctor={handleSelectDoctor} // Truyền hàm onSelectDoctor
+                />
+
                 <section className="relative bg-blue-900 text-white py-16">
                     <div className="max-w-4xl mx-auto text-center">
                         {/* Icon dấu ngoặc kép */}
@@ -45,8 +76,6 @@ export default function About() {
                         </div>
                     </div>
                 </section>
-
-
 
                 <Contact />
                 <Footer />

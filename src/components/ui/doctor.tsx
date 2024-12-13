@@ -1,35 +1,60 @@
 /* eslint-disable @next/next/no-img-element */
+/* Doctors.tsx */
 'use client';
 
+interface Doctor {
+    _id: string;
+    userId: {
+        fullName: string;
+    };
+    specialtyId: {
+        name: string;
+    };
+    yearsOfExperience: number;
+    licenseNumber: string;
+}
 
-export default function Doctors() {
-    const doctors = [
-        { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-1.jpg" },
-        { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-2.jpg" },
-        { name: "Doctor's Name", specialty: "Neurology", imageUrl: "/doctor-profile-3.jpg" },
+export default function Doctors({
+    doctors,
+    loading,
+    onSelectDoctor,
+}: {
+    doctors: Doctor[];
+    loading: boolean;
+    onSelectDoctor: (_id: string) => void;
+}) {
+    if (loading) {
+        return <div className="text-center py-12">Loading...</div>;
+    }
 
-    ];
+    if (!doctors || doctors.length === 0) {
+        return <div className="text-center py-12">No doctors available.</div>;
+    }
 
     return (
         <div className="flex flex-col items-center py-12">
-
             <h2 className="text-blue-900 text-3xl font-bold text-center mb-8">
                 Our Doctors
             </h2>
-            <div className="flex space-x-8">
-                {doctors.map((doctor, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {doctors.map((doctor) => (
                     <div
-                        key={index}
+                        key={doctor._id}
                         className="flex flex-col items-center w-60 bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                        onClick={() => {
+                            console.log("Selected Doctor ID:", doctor._id); // Ghi ra console ID của bác sĩ
+                            onSelectDoctor(doctor._id); // Gọi hàm xử lý khi chọn bác sĩ
+                        }}
                     >
                         <img
-                            src={doctor.imageUrl}
-                            alt={doctor.name}
+                            src="/doctor-profile-1.jpg"
+                            alt={doctor.userId.fullName}
                             className="w-full h-64 object-cover"
                         />
                         <div className="px-4 py-6 text-center">
-                            <h4 className="text-lg font-semibold text-blue-800">{doctor.name}</h4>
-                            <p className="text-sm text-gray-600 mb-4">{doctor.specialty}</p>
+                            <h4 className="text-lg font-semibold text-blue-800">{doctor.userId.fullName}</h4>
+                            <p className="text-sm text-gray-600 mb-2">Specialty: {doctor.specialtyId?.name}</p>
+                            <p className="text-sm text-gray-600 mb-4">Experience: {doctor.yearsOfExperience} years</p>
 
                             <a
                                 href="#"
@@ -41,12 +66,6 @@ export default function Doctors() {
                     </div>
                 ))}
             </div>
-            {/* Slider Dots
-            <div className="flex justify-center space-x-2 mt-8 ">
-                <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
-                <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
-                <div className="w-3 h-3 rounded-full bg-blue-900 hover:bg-gray-400 cursor-pointer"></div>
-            </div> */}
         </div>
     );
 }

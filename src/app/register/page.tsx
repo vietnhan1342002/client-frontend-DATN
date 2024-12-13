@@ -36,18 +36,6 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="mb-3">
-                                <label htmlFor="birthyear" className="block text-sm font-medium">
-                                    Year of Birth
-                                </label>
-                                <input
-                                    type="number"
-                                    id="birthyear"
-                                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter your year of birth"
-                                />
-                            </div>
-
-                            <div className="mb-3">
                                 <label htmlFor="phone" className="block text-sm font-medium">
                                     Phone Number
                                 </label>
@@ -56,18 +44,6 @@ export default function RegisterPage() {
                                     id="phone"
                                     className="w-full border border-gray-300 rounded-lg px-2 py-1.5 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter your phone number"
-                                />
-                            </div>
-
-                            <div className="mb-3">
-                                <label htmlFor="address" className="block text-sm font-medium">
-                                    Address
-                                </label>
-                                <input
-                                    type="text"
-                                    id="address"
-                                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter your address"
                                 />
                             </div>
 
@@ -95,17 +71,7 @@ export default function RegisterPage() {
                                 />
                             </div>
 
-                            <div className="mb-3">
-                                <label htmlFor="confirm-password" className="block text-sm font-medium">
-                                    Confirm Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="confirm-password"
-                                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Confirm your password"
-                                />
-                            </div>
+
 
                             <div className="flex items-center justify-center mb-4">
                                 <button

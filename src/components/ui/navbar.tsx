@@ -2,14 +2,16 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useEffect, useRef } from 'react';
-import { FaPhoneAlt, FaClock, FaMapMarkerAlt, FaSignInAlt } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaSignInAlt, FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { setDepartments } from '@/redux/store/departmentSlice';
 
 export default function Navbar() {
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = React.useState(false);
     const dispatch = useDispatch();
     const { departments, loading } = useSelector((state: RootState) => state.departments); // Access state from Redux store
@@ -44,6 +46,17 @@ export default function Navbar() {
     // }, [fetchDepartments]); // Empty dependency array ensures it only runs on component mount
 
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    useEffect(() => {
         if (departments.length === 0) {
             const fetchDepartments = async () => {
                 try {
@@ -69,59 +82,51 @@ export default function Navbar() {
 
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
+    // Xử lý logout
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        // Xử lý thêm nếu cần, ví dụ: xóa token, chuyển hướng
+        console.log('User logged out');
+    };
+
     return (
         <header className="bg-white border-b">
-            {/* Top Navbar */}
-            <div className="max-w-7xl mx-auto flex justify-between items-center py-2 px-4 text-sm text-gray-600">
-                {/* Left Section */}
-                <div className="text-blue-700 font-bold text-base">
-                    PHÒNG KHÁM ĐA KHOA
-                </div>
 
-                {/* Right Section */}
-                <div className="flex items-center gap-20">
-                    {/* Phone */}
-                    <div className="flex items-center gap-2">
-                        <FaPhoneAlt className="text-blue-500 w-5 h-5" />
-                        <div>
-                            <p className="font-medium text-gray-800">PHONE</p>
-                            <p>0123456789</p>
-                        </div>
-                    </div>
-
-                    {/* Work Hour */}
-                    <div className="flex items-center gap-2">
-                        <FaClock className="text-blue-500 w-5 h-5" />
-                        <div>
-                            <p className="font-medium text-gray-800">WORK HOUR</p>
-                            <p>09:00 - 20:00 Everyday</p>
-                        </div>
-                    </div>
-
-                    {/* Location */}
-                    <div className="flex items-center gap-2">
-                        <FaMapMarkerAlt className="text-blue-500 w-5 h-5" />
-                        <div>
-                            <p className="font-medium text-gray-800">LOCATION</p>
-                            <p>123 VO CHI CONG</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {/* Main Navbar */}
             <div className="bg-blue-900 text-white">
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
                     {/* Logo */}
-                    <div className="flex items-center space-x-2">
-                        <img src="/logo.png" alt="ZCARE Logo" className="h-8 w-8 object-contain" />
-                        <h1 className="text-xl font-bold">ZCARE</h1>
+                    <div className="flex flex-col items-center space-y-2">
+                        <div className="flex items-center space-x-2">
+                            <Link href="/" passHref>
+                                <button className="flex items-center space-x-2 bg-transparent border-none cursor-pointer">
+                                    <img src="/logo.png" alt="ZCARE Logo" className="h-8 w-8 object-contain" />
+                                    <h1 className="text-xl font-bold">ZCARE</h1>
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Contact Info below Logo (horizontal layout)
+                        <div className="flex items-center space-x-2 mt-2 text-sm">
+                            <div className="flex items-center gap-2">
+                                <FaPhoneAlt className="text-blue-500 w-5 h-5" />
+                                <p>0123456789</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <FaClock className="text-blue-500 w-5 h-5" />
+                                <p>09:00 - 20:00 Everyday</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <FaMapMarkerAlt className="text-blue-500 w-5 h-5" />
+                                <p>123 VO CHI CONG</p>
+                            </div>
+                        </div> */}
                     </div>
+
 
                     {/* Navigation */}
                     <nav className="flex gap-8 justify-center">
-                        <a href="/" className="hover:underline">Home</a>
-                        <a href="/about" className="hover:underline">About us</a>
 
                         {/* Dropdown for Departments */}
                         <div className="relative" ref={dropdownRef}>
@@ -172,13 +177,11 @@ export default function Navbar() {
                                     )}
                                 </div>
                             )}
-
-
-
-
                         </div>
+
                         <a href="/doctor" className="hover:underline">Doctors</a>
                         <a href="#news" className="hover:underline">News</a>
+                        <a href="/about" className="hover:underline">About us</a>
                         <a href="/contact" className="hover:underline">Contact</a>
                     </nav>
 
@@ -198,16 +201,41 @@ export default function Navbar() {
                             </svg>
                         </button>
 
-                        {/* Appointment Button */}
-                        <Link href="/appointment" className="bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400">
-                            Book An Appointment
-                        </Link>
 
-                        {/* Login Icon and Link */}
-                        <Link href="/login" className="flex items-center gap-2 bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400">
-                            <FaSignInAlt className="w-5 h-5" />
-                            Login
-                        </Link>
+
+                        {/* Login / User Icon */}
+                        <div className="flex items-center gap-4">
+                            {isLoggedIn ? (
+                                <div className="relative" ref={dropdownRef}>
+                                    <button
+                                        onClick={toggleDropdown}
+                                        className="flex items-center gap-2 bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400"
+                                    >
+                                        <FaUserCircle className="w-5 h-5" />
+                                        Profile
+                                    </button>
+
+                                    {isDropdownOpen && (
+                                        <div className="absolute right-0 bg-white text-black shadow-lg mt-2 py-2 rounded-md w-48 z-10">
+                                            <button
+                                                onClick={handleLogout}
+                                                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="flex items-center gap-2 bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400"
+                                >
+                                    <FaSignInAlt className="w-5 h-5" />
+                                    Login
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

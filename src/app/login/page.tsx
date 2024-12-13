@@ -21,22 +21,11 @@ export default function LoginPage() {
                 <div className="w-1/2 p-10 border-l-2 border-gray-200">
                     {/* Inner Box for Right Section */}
                     <div className="bg-white p-8 rounded-lg shadow-md border border-gray-300">
-                        <h1 className="text-3xl font-bold mb-6 text-blue-800">
-                            Welcome to <span className="text-blue-900">Design School</span>
+                        <h1 className="text-3xl text-center font-bold mb-6 text-blue-800">
+                            Welcome to <span className="text-blue-900">ZCARE</span>
                         </h1>
-                        <button className="w-full bg-white border border-gray-300 text-gray-600 rounded-lg px-4 py-2 mb-4 flex items-center justify-center shadow-sm hover:bg-gray-50">
-                            <img src="/google.png" alt="Google" className="w-5 h-5 mr-2" />
-                            Login with Google
-                        </button>
-                        <button className="w-full bg-white border border-gray-300 text-gray-600 rounded-lg px-4 py-2 mb-6 flex items-center justify-center shadow-sm hover:bg-gray-50">
-                            <img
-                                src="/facebook.png"
-                                alt="Facebook"
-                                className="w-5 h-5 mr-2"
-                            />
-                            Login with Facebook
-                        </button>
-                        <div className="text-center text-gray-500 mb-4">OR</div>
+
+
                         <form>
                             <div className="mb-4">
                                 <label htmlFor="phone" className="block text-sm font-medium">
@@ -68,12 +57,10 @@ export default function LoginPage() {
                                         Remember me
                                     </label>
                                 </div>
-                                <a href="#" className="text-sm text-blue-700 hover:underline">
-                                    Forgot Password?
-                                </a>
+
                             </div>
                             <Link
-                                href="/"
+                                href="/profile"
                                 className="w-full bg-blue-600 text-white rounded-lg px-4 py-2 text-center block hover:bg-blue-700 transition"
                             >
                                 Login

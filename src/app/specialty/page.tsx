@@ -21,7 +21,7 @@ const SpecialtyPage = () => {
         const fetchSpecialties = async () => {
             dispatch(setLoading(true)); // Bắt đầu trạng thái loading
             try {
-                const response = await axios.get('http://13.211.141.240:8080/api/v1/specialties');
+                const response = await axios.get('http://localhost:8080/api/v1/specialties');
 
                 const specialtyList = response.data.result;
                 console.log("API Response:", specialtyList); // Giả định API trả về trong trường `result`

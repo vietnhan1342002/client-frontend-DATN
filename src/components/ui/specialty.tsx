@@ -15,7 +15,7 @@ export default function Specialty() {
         const fetchDepartments = async () => {
             dispatch(setLoading(true)); // Set loading to true before making the API call
             try {
-                const response = await axios.get("http://13.211.141.240:8080/api/v1/departments");
+                const response = await axios.get("http://localhost:8080/api/v1/departments");
                 console.log('API Response:', response.data);
 
                 const departmentsData = response.data.result || [];

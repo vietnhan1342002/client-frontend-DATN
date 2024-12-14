@@ -1,26 +1,112 @@
 'use client';
 
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ChatBox() {
     const [isChatboxVisible, setChatboxVisible] = useState(false);
     const [message, setMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState<string[]>([]);
+    const [chatHistory, setChatHistory] = useState<{ type: 'user' | 'bot'; content: string }[]>([]);
+    const [dateList, setDateList] = useState<string[]>([]);
+    const [shiftList, setShiftList] = useState<string[]>([]);
+    const chatEndRef = useRef<HTMLDivElement>(null);
 
     // Hàm để toggle chatbox khi nhấn nút
     const toggleChatbox = () => {
         setChatboxVisible(!isChatboxVisible);
     };
 
-    // Hàm gửi tin nhắn
+    const scrollToBottom = () => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatHistory]);
+
     const handleSendMessage = async () => {
         if (message.trim()) {
-            // Cập nhật chat history
-            setChatHistory([...chatHistory, message]);
-            setMessage('');
+            setChatHistory((prev) => [...prev, { type: 'user', content: message }]);
 
-            // Gọi API để gửi tin nhắn (sẽ cập nhật sau)
-            // await sendMessageToServer(message);
+            const botResponse = await fetchMessage(message);
+            if (botResponse) {
+                console.log(botResponse);
+                setChatHistory((prev) => [...prev, { type: 'bot', content: botResponse.message }]);
+                if (botResponse.dateList?.length) {
+                    setDateList(botResponse.dateList); // Cập nhật danh sách ngày
+                }
+                if (botResponse.shiftList?.length) {
+                    setShiftList(botResponse.shiftList); // Cập nhật danh sách ca làm việc
+                }
+            }
+            setMessage(''); // Xóa input tin nhắn
+        }
+    };
+
+
+    const handleDateSelection = async (selectedDate: string) => {
+        setChatHistory((prev) => [
+            ...prev,
+            { type: 'user', content: `${selectedDate}` },
+        ]);
+        const botResponse = await fetchMessage(selectedDate);
+        if (botResponse) {
+            setChatHistory((prev) => [
+                ...prev,
+                { type: 'bot', content: botResponse.message },  // Đảm bảo lấy message từ API response
+            ]);
+        }
+        setDateList([])
+
+    };
+
+    const handleShiftSelection = async (selectedShift: string) => {
+        setChatHistory((prev) => [
+            ...prev,
+            { type: 'user', content: `${selectedShift}` },
+        ]);
+        const botResponse = await fetchMessage(selectedShift);
+        if (botResponse) {
+            setChatHistory((prev) => [
+                ...prev,
+                { type: 'bot', content: botResponse.message },  // Đảm bảo lấy message từ API response
+            ]);
+        }
+        setShiftList([])
+
+    };
+
+
+    const fetchMessage = async (message: string): Promise<{ message: string; dateList: string[], shiftList: string[] }> => {
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/v1/chat/message',
+                // 'http://localhost:8080/api/v1/chat/message',
+                { message }
+            );
+            const data = response.data.response;
+            console.log('API response:', data);
+            if (!data) {
+                throw new Error("Invalid response from server.");
+            }
+            if (data && data.shiftList) {
+                const shifts: string[] = data.shiftList.split(',').map((shift: string) => shift.trim());
+                setShiftList(shifts);  // Cập nhật danh sách ca làm việc
+            } else {
+                setShiftList([]);
+            }
+
+            return {
+                message: data.message || 'No message received.',
+                dateList: data.dateList || [],
+                shiftList: data.shiftList || []
+            };
+        } catch (err) {
+            console.error('Error fetching message:', err);
+            return { message: 'Sorry, something went wrong.', dateList: [], shiftList: [] };
         }
     };
 
@@ -57,12 +143,54 @@ export default function ChatBox() {
                     </div>
                     <div className="flex-1 overflow-y-auto mb-4">
                         {/* Hiển thị lịch sử chat */}
-                        {chatHistory.map((msg, index) => (
-                            <div key={index} className="mb-2">
-                                <p className="text-sm bg-gray-200 p-2 rounded-lg">{msg}</p>
+                        {chatHistory.map((chat, index) => (
+                            <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'} mb-2`}>
+                                <div className={`p-3 rounded-lg max-w-xs ${chat.type === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'}`}>
+                                    {chat.content}
+                                </div>
                             </div>
                         ))}
+
+                        {/* Hiển thị danh sách ngày nếu có */}
+                        {dateList.length > 0 && (
+                            <div className="mt-6">
+                                <p className="text-sm font-semibold text-gray-700">Select date:</p>
+                                <div className="flex flex-wrap gap-3 mt-3">
+                                    {dateList.map((date, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleDateSelection(date)} // Hàm xử lý khi người dùng chọn ngày
+                                            className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transform hover:scale-105 transition-all"
+                                        >
+                                            {date}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Hiển thị danh sách ca nếu có */}
+                        {shiftList.length > 0 && (
+                            <div className="mt-6">
+                                <p className="text-sm font-semibold text-gray-700">Chọn ca làm việc:</p>
+                                <div className="flex flex-wrap gap-3 mt-3">
+                                    {shiftList.map((shift, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleShiftSelection(shift)} // Hàm xử lý khi người dùng chọn ca làm việc
+                                            className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transform hover:scale-105 transition-all"
+                                        >
+                                            {shift}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Ref để cuộn đến cuối tin nhắn */}
+                        <div ref={chatEndRef}></div>
                     </div>
+
                     {/* Input gửi tin nhắn trong khung chat */}
                     <div className="flex items-center">
                         <input

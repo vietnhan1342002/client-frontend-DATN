@@ -1,9 +1,78 @@
-/* eslint-disable @next/next/no-img-element */
+'use client'
 
-
-import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
 
 export default function LoginPage() {
+
+    const initialLogin = {
+        phoneNumber: '',
+        password: ''
+    }
+    const router = useRouter()
+    const [formLogin, setFormLogin] = useState(initialLogin)
+
+    useEffect(() => {
+        const savedPhoneNumber = localStorage.getItem('phoneNumber');
+        if (savedPhoneNumber) {
+            setFormLogin(prevState => ({
+                ...prevState,
+                phoneNumber: savedPhoneNumber
+            }));
+        }
+    }, [])
+
+    const fetchLogin = async () => {
+        try {
+            const res = await axios.post(`http://localhost:8080/api/v1/user-auth/login`, {
+                phoneNumber: formLogin.phoneNumber,
+                password: formLogin.password
+            });
+
+            const patientId = await axios.get(`http://localhost:8080/api/v1/patients/user/${res.data.userId}`)
+            console.log('patientId', patientId);
+
+            if (res.data) {
+                localStorage.setItem('accessToken', res.data.accessToken)
+                localStorage.setItem('patientId', patientId.data)
+            }
+            toast.success('Login successful!');
+            router.push('/profile')
+
+        } catch (error: any) {
+            if (error.response) {
+                if (error.response.status === 400) {
+                    toast.error(`Login failed: ${error.response.data.message || 'Unknown error'}`);
+                } else {
+                    toast.error(`An error occurred: ${error.message}`);
+                }
+            } else {
+                toast.error('Network error or no response from server');
+            }
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormLogin(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!formLogin.phoneNumber || !formLogin.password) {
+            toast.warning("Please fill in both fields.");
+            return;
+        }
+        fetchLogin()
+        localStorage.removeItem('phoneNumber');
+        console.log("Form submitted with: ", formLogin);
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-100">
             {/* Outer Card with Rounded Border */}
@@ -26,46 +95,40 @@ export default function LoginPage() {
                         </h1>
 
 
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label htmlFor="phone" className="block text-sm font-medium">
                                     Phone
                                 </label>
                                 <input
-                                    type="tel"
-                                    id="phone"
+                                    type="text"
+                                    name="phoneNumber"
+                                    onChange={handleChange}
+                                    value={formLogin.phoneNumber}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter your phone number"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label htmlFor="password" className="block text-sm font-medium">
                                     Password
                                 </label>
                                 <input
                                     type="password"
-                                    id="password"
+                                    name="password"
+                                    onChange={handleChange}
+                                    value={formLogin.password}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="********"
+                                    placeholder="Enter your pasword"
                                 />
                             </div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div>
-                                    <input type="checkbox" id="remember" className="mr-2" />
-                                    <label htmlFor="remember" className="text-sm">
-                                        Remember me
-                                    </label>
-                                </div>
-
-                            </div>
-                            <Link
-                                href="/profile"
+                            <button
                                 className="w-full bg-blue-600 text-white rounded-lg px-4 py-2 text-center block hover:bg-blue-700 transition"
                             >
                                 Login
-                            </Link>
+                            </button>
                         </form>
+                        <Toaster className='absolute' position='top-center' />
                         <div className="text-center mt-4">
                             <p className="text-sm">
                                 Don’t have an account?{" "}

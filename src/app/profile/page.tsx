@@ -1,8 +1,55 @@
+// pages/PatientProfile.tsx
 'use client';
 
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { RootState } from '@/redux/store';
+import { setPatients, setLoading, selectPatient } from '@/redux/store/patientSlice';
 import Image from 'next/image';
 
 export default function PatientProfile() {
+    const dispatch = useDispatch();
+    const { patients, selectedPatient, loading } = useSelector((state: RootState) => state.patients);
+    // console.log("Patients in Redux:", patients);
+
+    const patientId = '673e98d56f34d8f4422ea2cf';
+
+    useEffect(() => {
+        const fetchPatientsData = async () => {
+            dispatch(setLoading(true)); // Set loading là true khi bắt đầu gọi API
+            try {
+                const response = await axios.get('http://13.211.141.240:8080/api/v1/patients');
+                console.log('API Response:', response.data);
+
+                const patientsData = response.data.result || []; // Dữ liệu bệnh nhân
+                dispatch(setPatients(patientsData)); // Lưu dữ liệu vào Redux
+            } catch (error) {
+                console.error('Error fetching patients data:', error);
+            } finally {
+                dispatch(setLoading(false)); // Set loading là false khi hoàn tất gọi API
+            }
+        };
+
+        fetchPatientsData(); // Gọi API khi component mount
+    }, [dispatch]);
+
+    // Khi bệnh nhân đã được chọn, sẽ hiển thị chi tiết
+    useEffect(() => {
+        if (patients.length > 0) {
+
+            dispatch(selectPatient(patientId)); // Chọn bệnh nhân từ list dựa trên patientId
+        }
+    }, [dispatch, patients, patientId]);
+
+    if (loading) {
+        return <div>Loading...</div>; // Hiển thị loading khi đang tải dữ liệu
+    }
+
+    if (!selectedPatient) {
+        return <div>No patient data found.</div>; // Hiển thị khi không có dữ liệu bệnh nhân
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 py-10">
             <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-8">
@@ -10,10 +57,6 @@ export default function PatientProfile() {
                 <div className="flex items-center justify-between border-b pb-4 mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800">Patient Profile</h1>
                     <div className="flex space-x-4">
-                        {/* Edit Profile Button */}
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                            Edit Profile
-                        </button>
                         <a
                             href="/medicalrecords"
                             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 block text-center"
@@ -28,7 +71,7 @@ export default function PatientProfile() {
                     {/* Avatar */}
                     <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-blue-500">
                         <Image
-                            src="/doctor-profile-1.jpg" // Đặt ảnh avatar trong public/
+                            src={selectedPatient.userId.avatar || '/doctor-profile-1.jpg'} // Avatar bệnh nhân
                             alt="Patient Avatar"
                             layout="fill"
                             objectFit="cover"
@@ -37,21 +80,23 @@ export default function PatientProfile() {
 
                     {/* Info */}
                     <div className="md:ml-8 mt-6 md:mt-0">
-                        <h2 className="text-xl font-semibold text-gray-700">Nguyễn Văn A</h2>
+                        <h2 className="text-xl font-semibold text-gray-700">{selectedPatient.userId.fullName}</h2>
                         <p className="text-gray-500 mt-2">
-                            <strong>Ngày sinh:</strong> 01/01/1990
+                            <strong>Ngày sinh:</strong> {selectedPatient.dateOfBirth}
                         </p>
                         <p className="text-gray-500 mt-2">
-                            <strong>Giới tính:</strong> Nam
+                            <strong>Giới tính:</strong> {selectedPatient.gender}
                         </p>
                         <p className="text-gray-500 mt-2">
-                            <strong>Số điện thoại:</strong> +84 987 654 321
+                            <strong>Số điện thoại:</strong> {selectedPatient.userId.phoneNumber}
                         </p>
                         <p className="text-gray-500 mt-2">
-                            <strong>Địa chỉ:</strong> 123 Đường ABC, Phường XYZ, Quận 1, TP.HCM
+                            <strong>Địa chỉ:</strong> {selectedPatient.address}
                         </p>
                     </div>
                 </div>
+
+
 
                 {/* Form */}
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-6">

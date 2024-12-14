@@ -3,6 +3,7 @@ import specialtyReducer from './store/specialtySlice';
 import serviceReducer from './store/serviceSlice';
 import departmentReducer from './store/departmentSlice';
 import doctorReducer from './store/doctorSlice';
+import patientReducer from './store/patientSlice';
 
 // Tạo store với reducers
 export const makeStore = () =>
@@ -11,7 +12,8 @@ export const makeStore = () =>
             specialties: specialtyReducer,
             services: serviceReducer,
             departments: departmentReducer,
-            doctors: doctorReducer,// Thêm slice ở đây
+            doctors: doctorReducer,
+            patients: patientReducer,// Thêm slice ở đây
         },
     });
 

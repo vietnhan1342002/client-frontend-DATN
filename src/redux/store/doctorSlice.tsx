@@ -14,8 +14,7 @@ interface Doctor {
         _id: string;
         name: string;
     };
-    createdAt: string;
-    updatedAt: string;
+
 }
 
 // Định nghĩa state

@@ -56,12 +56,6 @@ export default function Doctors({
                             <p className="text-sm text-gray-600 mb-2">Specialty: {doctor.specialtyId?.name}</p>
                             <p className="text-sm text-gray-600 mb-4">Experience: {doctor.yearsOfExperience} years</p>
 
-                            <a
-                                href="#"
-                                className="inline-block text-sm text-white bg-blue-900 py-2 px-6 rounded-full hover:bg-gray-400 transition-all"
-                            >
-                                View Profile
-                            </a>
                         </div>
                     </div>
                 ))}

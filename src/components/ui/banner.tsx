@@ -91,7 +91,9 @@ export default function Banner() {
         try {
             const response = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`);
             // const response = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`)
+
             if (response.data) {
+                console.log(response.data);
                 setFilteredDoctors(response.data)
             }
         } catch (err) {

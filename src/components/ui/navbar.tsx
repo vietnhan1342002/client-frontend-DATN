@@ -65,7 +65,6 @@ export default function Navbar() {
     }, [isLoggedIn, dispatch, departments.length]);
 
     const handleDepartmentSelect = (id: string) => {
-        console.log(id);
         setSelectedDepartmentId(id);
         setSpecialtyDropdownOpen(false);
         router.push(`/service/${id}`)
@@ -74,12 +73,8 @@ export default function Navbar() {
     const fetchDepartments = async () => {
         try {
             const response = await axios.get("http://localhost:8080/api/v1/departments");
-            console.log('API Response:', response.data);
-
             const departmentsData = response.data.result || [];
-
             departmentsData.forEach((department: { departmentName: string }) => {
-                console.log('Department Name:', department.departmentName);
             });
 
             dispatch(setDepartments(departmentsData));

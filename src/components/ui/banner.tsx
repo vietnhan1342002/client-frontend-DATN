@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedService } from '@/redux/store/serviceSlice';
 import axios from 'axios';
 import { Toaster, toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 
 export default function Banner() {
@@ -13,7 +14,7 @@ export default function Banner() {
     const uniqueDates = new Set<string>();
 
     const dispatch = useDispatch();
-
+    const router = useRouter()
 
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [filteredDates, setFilteredDates] = useState([]);
@@ -96,7 +97,8 @@ export default function Banner() {
                 console.log(response.data);
                 setFilteredDoctors(response.data)
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast.error(err.response.data.message)
             console.error("Error fetching specialties:", err);
         }
     };
@@ -233,16 +235,12 @@ export default function Banner() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const patientId = localStorage.getItem('patientId');
         setError(null);
-
         try {
-            const patientId = localStorage.getItem('patientId');
-
-
             if (patientId) {
                 await handleAppointment(patientId);
             } else {
-
                 await handleRegistrationAndAppointment();
             }
         } catch (error: any) {
@@ -262,7 +260,7 @@ export default function Banner() {
             });
 
             const appointmentDetail = await getAppointmentDetail(appointment.data._id);
-
+            router.push(`/appointment?id=${appointment.data._id}`);
             resetFormState();
             toast.success(`Your appointment has been scheduled for ${appointmentDetail}. Have a good day!`);
         } catch (error: any) {
@@ -288,7 +286,7 @@ export default function Banner() {
             });
 
             const appointmentDetail = await getAppointmentDetail(appointment.data._id);
-
+            router.push(`/appointment?id=${appointment.data._id}`);
             // Lưu patientId vào localStorage
             localStorage.setItem('patientId', patient.data._id);
 

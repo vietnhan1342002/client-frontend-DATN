@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
@@ -14,11 +13,10 @@ export default function Navbar() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { departments, loading } = useSelector((state: RootState) => state.departments); // Access state from Redux store
-    const token = localStorage.getItem('accessToken');
+    const [token, setToken] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isSpecialtyDropdownOpen, setSpecialtyDropdownOpen] = useState(false);
     const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
-
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string | null>(null);
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -32,21 +30,16 @@ export default function Navbar() {
     };
 
 
-    // useEffect(() => {
-    //     fetchDepartments(); // Fetch departments when the component mounts
-
-    //     const handleClickOutside = (event: MouseEvent) => {
-    //         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-    //             setDropdownOpen(false);
-    //         }
-    //     };
-
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => document.removeEventListener("mousedown", handleClickOutside);
-    // }, [fetchDepartments]); // Empty dependency array ensures it only runs on component mount
-
     const toggleSpecialtyDropdown = () => setSpecialtyDropdownOpen(!isSpecialtyDropdownOpen);
     const toggleProfileDropdown = () => setProfileDropdownOpen(!isProfileDropdownOpen);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedToken = localStorage.getItem('accessToken');
+            setToken(storedToken);
+            setIsLoggedIn(!!storedToken);
+        }
+    }, []);
 
     useEffect(() => {
         const handleStorageChange = () => {
@@ -62,7 +55,7 @@ export default function Navbar() {
             window.removeEventListener('storage', handleStorageChange);
         };
 
-    }, [isLoggedIn, dispatch, departments.length]);
+    }, [token, dispatch, departments.length]);
 
     const handleDepartmentSelect = (id: string) => {
         setSelectedDepartmentId(id);

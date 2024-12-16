@@ -4,6 +4,7 @@
 
 interface Doctor {
     _id: string;
+    avatar: string,
     userId: {
         fullName: string;
     };
@@ -47,7 +48,7 @@ export default function Doctors({
                         }}
                     >
                         <img
-                            src="/doctor-profile-1.jpg"
+                            src={doctor.avatar}
                             alt={doctor.userId.fullName}
                             className="w-full h-64 object-cover"
                         />

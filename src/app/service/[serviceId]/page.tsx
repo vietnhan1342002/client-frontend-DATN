@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 // Define the types for the API response
 interface ServiceDescription {
     introduction: string;
-    qualifications: string;
-    relatedDiseases: string;
+    qualifications: string[];
+    relatedDiseases: string[];
     doctors: string[];
     diseases: string[];
 }
@@ -22,64 +22,60 @@ interface Service {
 
 const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
     const [serviceData, setServiceData] = useState<Service[]>([]);
-
-    const initialData = {
+    const [serviceDetailData, setServiceDetailData] = useState<Service>({
         _id: "",
         name: "",
         description: {
             introduction: "",
             qualifications: [],
-            relatedDiseases: []
-        },
-        departmentId: {
-            departmentName: ""
+            relatedDiseases: [],
+            doctors: [],
+            diseases: []
         }
-    }
-
-    const initialDoctor = [{
-        _id: '',
-        userId: {
-            fullName: ''
-        },
-        licenseNumber: '',
-        yearsOfExperience: 0
-    }]
-
-    const [serviceDetailData, setServiceDetailData] = useState(initialData)
-    const [doctorDetail, setDoctorDetail] = useState(initialDoctor)
-
+    });
+    const [doctorDetail, setDoctorDetail] = useState<any[]>([]);
+    const [noDoctors, setNoDoctors] = useState<boolean>(false);  // State để kiểm tra xem có bác sĩ không
 
     const departmentId = params.serviceId;
 
     const fetchServiceData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/filter/specialties?departmentId=${departmentId}`); // Adjust API endpoint
-            setServiceData(response.data)
+            const response = await axios.get(`http://localhost:8080/api/v1/filter/specialties?departmentId=${departmentId}`);
+            setServiceData(response.data);
             if (response.data && response.data.length > 0) {
-                handleSelectService(response.data[0]._id); // Mặc định chọn dịch vụ thứ 2
+                handleSelectService(response.data[0]._id); // Mặc định chọn dịch vụ đầu tiên
             }
         } catch (err) {
-            toast.error('Error fetching service data')
+            toast.error('Error fetching service data');
             console.error('Error fetching service data:', err);
         }
     };
-
 
     useEffect(() => {
         fetchServiceData();
     }, []);
 
-    // Hàm để xử lý sự kiện khi người dùng chọn hoặc bỏ chọn dịch vụ
     const handleSelectService = async (serviceId: string) => {
-        const response = await axios.get(`http://localhost:8080/api/v1/specialties/${serviceId}`);
-        const doctor = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${serviceId}`)
-        const serviceDetail = response.data;
-        const doctors = doctor.data
-        console.log(doctors);
-        setDoctorDetail(doctors)
-        setServiceDetailData(serviceDetail)
-    };
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/specialties/${serviceId}`);
+            setServiceDetailData(response.data);
 
+            const doctorResponse = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${serviceId}`);
+            const doctors = doctorResponse.data;
+
+            // Kiểm tra và cập nhật trạng thái khi không có bác sĩ
+            if (Array.isArray(doctors) && doctors.length === 0) {
+                setNoDoctors(true);
+                setDoctorDetail([]);  // Nếu không có bác sĩ, xóa danh sách
+            } else {
+                setNoDoctors(false);
+                setDoctorDetail(doctors);  // Cập nhật danh sách bác sĩ
+            }
+        } catch (error) {
+            console.error("Error fetching service or doctor details:", error);
+            toast.error('Error fetching service or doctor details');
+        }
+    };
 
     return (
         <div className="bg-gray-50 min-h-screen py-10 px-4">
@@ -93,7 +89,6 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
                         {serviceData.map((service) => (
                             <li key={service._id} className="flex items-center gap-2">
                                 <button
-                                    key={service._id}
                                     onClick={() => handleSelectService(service._id)}
                                     className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
                                 >
@@ -144,15 +139,19 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
                     {/* Doctor Information */}
                     <div className="mt-6">
                         <h4 className="text-xl font-semibold text-gray-900">Doctor Information</h4>
-                        <div className="space-y-4 mt-2">
-                            {doctorDetail.map((doctor) => (
-                                <div key={doctor._id} className="bg-white shadow-sm rounded-lg p-4 border border-gray-200">
-                                    <p className="text-lg font-semibold text-blue-800">{doctor.userId.fullName}</p>
-                                    <p className="text-gray-600 text-md">License: <span className="font-medium">{doctor.licenseNumber}</span></p>
-                                    <p className="text-gray-600 text-md">Experience: <span className="font-medium">{doctor.yearsOfExperience} years</span></p>
-                                </div>
-                            ))}
-                        </div>
+                        {noDoctors ? (
+                            <p className="text-lg text-red-600">No doctors available for this service.</p>
+                        ) : (
+                            <div className="space-y-4 mt-2">
+                                {doctorDetail.map((doctor) => (
+                                    <div key={doctor._id} className="bg-white shadow-sm rounded-lg p-4 border border-gray-200">
+                                        <p className="text-lg font-semibold text-blue-800">{doctor.userId.fullName}</p>
+                                        <p className="text-gray-600 text-md">License: <span className="font-medium">{doctor.licenseNumber}</span></p>
+                                        <p className="text-gray-600 text-md">Experience: <span className="font-medium">{doctor.yearsOfExperience} years</span></p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>

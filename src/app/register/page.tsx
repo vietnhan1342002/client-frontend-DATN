@@ -108,7 +108,6 @@ export default function RegisterPage() {
         } catch (error: any) {
             if (error.response) {
                 if (error.response.status === 400) {
-                    console.log(error);
                     toast.error(`Login failed: ${error.response.data.message || 'Unknown error'}`);
                 } else {
                     toast.error(`An error occurred: ${error.message}`);
@@ -122,7 +121,7 @@ export default function RegisterPage() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Form submitted with: ", formRegister);
+
         fetchRegister()
     };
 

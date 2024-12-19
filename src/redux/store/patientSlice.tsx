@@ -40,7 +40,6 @@ const patientSlice = createSlice({
             state.loading = action.payload;
         },
         selectPatient(state, action: PayloadAction<string>) {
-            // console.log("Selecting patient with ID:", action.payload);
             state.selectedPatient = state.patients.find(
                 (patient) => patient._id === action.payload
             ) || null;

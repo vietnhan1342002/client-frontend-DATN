@@ -24,7 +24,6 @@ const SpecialtyPage = () => {
                 const response = await axios.get('http://localhost:8080/api/v1/specialties');
 
                 const specialtyList = response.data.result;
-                console.log("API Response:", specialtyList); // Giả định API trả về trong trường `result`
                 dispatch(setSpecialties(specialtyList)); // Lưu specialties vào Redux
             } catch (err) {
                 console.error('Error fetching specialties:', err);

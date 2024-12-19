@@ -17,7 +17,6 @@ export default function Doctor() {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/doctors'); // URL API doctors
                 const doctorList = response.data.result; // Giả định API trả về trong `result`
-                console.log("Doctors API Response:", doctorList);
                 setDoctors(doctorList); // Lưu danh sách bác sĩ vào state
             } catch (err) {
                 console.error('Error fetching doctors:', err);

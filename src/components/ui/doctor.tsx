@@ -43,7 +43,6 @@ export default function Doctors({
                         key={doctor._id}
                         className="flex flex-col items-center w-60 bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                         onClick={() => {
-                            console.log("Selected Doctor ID:", doctor._id); // Ghi ra console ID của bác sĩ
                             onSelectDoctor(doctor._id); // Gọi hàm xử lý khi chọn bác sĩ
                         }}
                     >

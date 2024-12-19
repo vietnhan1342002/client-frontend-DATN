@@ -46,11 +46,7 @@ export default function MedicalRecordsPage() {
         try {
             const response = await axios.get(`http://localhost:8080/api/v1/filter/medical_records?patientId=${patientId}`)
             const medicalRecords = response.data;
-            console.log('medical_records.data', medicalRecords);
-            // Extract patientId from the data
             const extractedPatientId = medicalRecords.map((record: any) => record.patientId.userId.fullName);
-            console.log('extractedPatientId', extractedPatientId);
-
             setFormData(medicalRecords)
         } catch (error: any) {
             toast.error(`Error`)

@@ -26,12 +26,9 @@ export default function PatientProfile() {
         try {
             const response = await axios.get(`http://localhost:8080/api/v1/patients/${patientId}`);
             const patient = response.data;
-            console.log('patient', patient);
             if (patient.dateOfBirth) {
                 const formattedDate = patient.dateOfBirth.split('T')[0];
                 patient.dateOfBirth = formattedDate;
-                console.log('patient.dateOfBirth', patient.dateOfBirth);
-
             }
             setFormData(patient);
             setSubmittedData(patient);
@@ -92,7 +89,6 @@ export default function PatientProfile() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('submittedData', submittedData);
         if (patientId) {
             fetchUpdatePatient(patientId);
         }

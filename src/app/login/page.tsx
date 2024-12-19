@@ -32,7 +32,6 @@ export default function LoginPage() {
             });
 
             const patientId = await axios.get(`http://localhost:8080/api/v1/patients/user/${res.data.userId}`)
-            console.log('patientId', patientId);
 
             if (res.data) {
                 localStorage.setItem('accessToken', res.data.accessToken)

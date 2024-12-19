@@ -94,7 +94,6 @@ export default function Banner() {
             // const response = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`)
 
             if (response.data) {
-                console.log(response.data);
                 setFilteredDoctors(response.data)
             }
         } catch (err: any) {
@@ -107,7 +106,6 @@ export default function Banner() {
         try {
             const response = await axios.get(`http://localhost:8080/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active&shiftId=${shiftId}`);
             // const response = await axios.get(`http://localhost:8080/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active`);
-            console.log('response.data', response.data);
 
             if (response.data) {
                 setFilteredDates(response.data)
@@ -164,74 +162,6 @@ export default function Banner() {
     };
 
     const [error, setError] = useState<string | null>(null);
-
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-    //     setError(null);
-
-    //     try {
-    //         // Lấy patientId từ localStorage
-    //         const storedPatientId = localStorage.getItem('patientId');
-
-    //         if (storedPatientId) {
-    //             // Nếu đã có patientId trong localStorage, không tạo người dùng mới mà chỉ lấy thông tin bệnh nhân
-    //             const patient = await axios.get(`http://localhost:8080/api/v1/patients/${storedPatientId}`);
-
-    //             const appointment = await axios.post('http://localhost:8080/api/v1/appointments/', {
-    //                 patientId: patient.data._id,
-    //                 doctorId: selectedDoctor,
-    //                 doctorScheduleId: doctorScheduleId
-    //             });
-
-    //             console.log(appointment.data._id);
-
-    //             const getAppointment = await axios.get(`http://localhost:8080/api/v1/appointments/${appointment.data._id}`);
-    //             const detail = getAppointment.data.result.appointmentDate;
-
-    //             // Reset các lựa chọn và form
-    //             setSelectedService('');
-    //             setSelectedDoctor('');
-    //             setSelectedDate('');
-    //             setSelectedTime('');
-    //             setFormData(initialFormData);
-
-    //             toast.success(`Your appointment has been scheduled for ${detail}. Have a good day!`);
-
-    //         } else {
-    //             // Nếu không có patientId trong localStorage, tạo tài khoản người dùng mới
-    //             const user = await axios.post('http://localhost:8080/api/v1/user-auth/register', {
-    //                 password: formData.phone,
-    //                 fullName: formData.name,
-    //                 phoneNumber: formData.phone
-    //             });
-
-    //             const patient = await axios.get(`http://localhost:8080/api/v1/patients/user/${user.data._id}`);
-
-    //             const appointment = await axios.post('http://localhost:8080/api/v1/appointments/', {
-    //                 patientId: patient.data,
-    //                 doctorId: selectedDoctor,
-    //                 doctorScheduleId: doctorScheduleId
-    //             });
-
-    //             console.log(appointment.data._id);
-
-    //             const getAppointment = await axios.get(`http://localhost:8080/api/v1/appointments/${appointment.data._id}`);
-    //             const detail = getAppointment.data.result.appointmentDate;
-
-    //             // Reset các lựa chọn và form
-    //             setSelectedService('');
-    //             setSelectedDoctor('');
-    //             setSelectedDate('');
-    //             setSelectedTime('');
-    //             setFormData(initialFormData);
-
-    //             toast.success(`I created an account for you with a phone and password is your phone number.\nYour appointment has been scheduled for ${detail}. Have a good day!`);
-    //         }
-
-    //     } catch (error: any) {
-    //         toast.error(error.response.data.message || 'An error occurred');
-    //     }
-    // };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

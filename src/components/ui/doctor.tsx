@@ -2,9 +2,11 @@
 /* Doctors.tsx */
 'use client';
 
+import { usePathname } from 'next/navigation'; // Import usePathname
+
 interface Doctor {
     _id: string;
-    avatar: string,
+    avatar: string;
     userId: {
         fullName: string;
     };
@@ -24,11 +26,16 @@ export default function Doctors({
     loading: boolean;
     onSelectDoctor: (_id: string) => void;
 }) {
+    const pathname = usePathname(); // Lấy đường dẫn hiện tại
+
+    // Nếu đang ở trang '/', chỉ lấy 3 bác sĩ đầu tiên
+    const filteredDoctors = pathname === '/' ? doctors.slice(0, 3) : doctors;
+
     if (loading) {
         return <div className="text-center py-12">Loading...</div>;
     }
 
-    if (!doctors || doctors.length === 0) {
+    if (!filteredDoctors || filteredDoctors.length === 0) {
         return <div className="text-center py-12">No doctors available.</div>;
     }
 
@@ -38,7 +45,7 @@ export default function Doctors({
                 Our Doctors
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {doctors.map((doctor) => (
+                {filteredDoctors.map((doctor) => (
                     <div
                         key={doctor._id}
                         className="flex flex-col items-center w-60 bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -55,7 +62,6 @@ export default function Doctors({
                             <h4 className="text-lg font-semibold text-blue-800">{doctor.userId.fullName}</h4>
                             <p className="text-sm text-gray-600 mb-2">Specialty: {doctor.specialtyId?.name}</p>
                             <p className="text-sm text-gray-600 mb-4">Experience: {doctor.yearsOfExperience} years</p>
-
                         </div>
                     </div>
                 ))}

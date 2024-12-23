@@ -30,11 +30,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-
         <StoreProvider>
-          <Navbar />
-          {children}
+          <div className="fixed top-0 w-full z-50">
+            <Navbar />
+          </div>
+          <div className="pt-[<height-of-navbar>]">
+            {children}
+          </div>
         </StoreProvider>
+
 
       </body>
     </html>

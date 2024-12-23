@@ -145,9 +145,8 @@ export default function Navbar() {
                             )}
                         </div>
                         <a href="/doctor" className="hover:underline">Doctors</a>
-                        <a href="#news" className="hover:underline">News</a>
                         <a href="/about" className="hover:underline">About us</a>
-                        <a href="/contact" className="hover:underline">Contact</a>
+                        {/* <a href="/contact" className="hover:underline">Contact</a> */}
                     </nav>
 
                     <div className="flex items-center gap-4">

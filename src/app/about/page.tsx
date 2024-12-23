@@ -4,7 +4,6 @@
 import BannerDetail from "@/components/ui/bannerdetail";
 import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
-import News from "@/components/ui/new";
 
 export default function About() {
     return (
@@ -110,25 +109,20 @@ export default function About() {
                         {/* Nội dung bên trái */}
                         <div className="w-full md:w-1/2">
                             <h2 className="text-lg text-blue-700 font-bold uppercase mb-2">
-                                Tầm nhìn
+                                Vision
                             </h2>
 
-                            {/* Đoạn mô tả */}
+                            {/* Description */}
                             <p className="text-lg text-gray-600 mb-6">
-                                Đến 2030, ZCARE là một tập đoàn y tế lớn của Việt Nam cung cấp
-                                những giải pháp sức khỏe uy tín, chính xác và hợp lý được cộng đồng đón nhận
+                                By 2030, ZCARE aims to be a leading healthcare group in Vietnam, providing reputable, accurate, and reasonable health solutions embraced by the community.
                             </p>
 
                             <h2 className="text-lg text-blue-700 font-bold uppercase mb-2">
-                                Sứ mệnh
+                                Mission
                             </h2>
 
                             <p className="text-lg text-gray-600">
-                                ZCARE không ngừng phát triển, lớn mạnh mỗi ngày để hoàn thành
-                                tốt sứ mệnh cung cấp những giải pháp tốt nhất chăm sóc, bảo vệ sức khỏe
-                                và phòng ngừa bệnh tật cho từng cá nhân, gia đình, đơn vị, cộng đồng tại
-                                Đà Nẵng, khu vực miền Trung - Tây Nguyên, toàn thế Việt Nam và các
-                                nước Đông Dương
+                                ZCARE continuously grows and evolves every day to fulfill its mission of delivering the best solutions for health care, protection, and disease prevention for individuals, families, organizations, and communities in Da Nang, the Central Highlands, across Vietnam, and neighboring Indochina countries.
                             </p>
                         </div>
 
@@ -142,8 +136,6 @@ export default function About() {
                         </div>
                     </div>
                 </section>
-
-                <News />
                 <Contact />
                 <Footer />
             </div>

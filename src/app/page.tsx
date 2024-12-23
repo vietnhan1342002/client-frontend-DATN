@@ -11,7 +11,6 @@ import ChatBox from "@/components/ui/chatbox";
 import CareSection from "@/components/ui/caresection";
 import Service from "@/components/ui/service";
 import Specialty from "@/components/ui/specialty";
-import News from "@/components/ui/new";
 import Footer from "@/components/ui/footer";
 import Doctors from '@/components/ui/doctor';
 
@@ -27,7 +26,7 @@ export default function Home() {
         const serviceList = response.data.result;
         dispatch(setServices(serviceList));
       } catch (err) {
-        console.error('Lỗi khi lấy dịch vụ:', err);
+        console.error('Error:', err);
       } finally {
         dispatch(setServiceLoading(false));
       }
@@ -40,7 +39,7 @@ export default function Home() {
         const doctorList = response.data.result;
         dispatch(setDoctors(doctorList));
       } catch (err) {
-        console.error('Lỗi khi lấy bác sĩ:', err);
+        console.error('Error:', err);
       } finally {
         dispatch(setDoctorLoading(false));
       }
@@ -52,8 +51,7 @@ export default function Home() {
 
   // Hàm xử lý khi chọn bác sĩ
   const handleSelectDoctor = (id: string) => {
-    console.log("Đã chọn bác sĩ với ID:", id);
-    // Xử lý thêm nếu cần, ví dụ: lưu ID vào Redux, hiển thị chi tiết bác sĩ, v.v.
+    console.log("Doctor ID:", id);
   };
 
   return (
@@ -64,7 +62,6 @@ export default function Home() {
       <Specialty />
       <Service />
       <Doctors doctors={doctors} loading={doctorsLoading} onSelectDoctor={handleSelectDoctor} />
-      <News />
       <Footer />
     </main>
   );

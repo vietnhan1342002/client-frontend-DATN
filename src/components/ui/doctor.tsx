@@ -8,14 +8,18 @@ interface Doctor {
     _id: string;
     avatar: string;
     userId: {
+        _id: string;
         fullName: string;
+        phoneNumber: string;
     };
+    licenseNumber: string;
+    yearsOfExperience: number;
     specialtyId: {
+        _id: string;
         name: string;
     };
-    yearsOfExperience: number;
-    licenseNumber: string;
 }
+
 
 export default function Doctors({
     doctors,

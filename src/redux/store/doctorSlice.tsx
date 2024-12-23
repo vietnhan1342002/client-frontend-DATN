@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // Định nghĩa kiểu dữ liệu cho Doctor
 interface Doctor {
     _id: string;
+    avatar: string;
     userId: {
         _id: string;
         fullName: string;

@@ -7,8 +7,16 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function PatientProfile() {
+    const [patientId, setPatientId] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const patientId = localStorage.getItem('patientId')
+            if (patientId) {
+                setPatientId(patientId)
+            }
+        }
+    }, []);
 
-    const patientId = localStorage.getItem('patientId')
 
     const initialData = {
         address: "",

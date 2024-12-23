@@ -2,24 +2,13 @@
 
 import PrivateRoute from '@/PrivateRouter';
 import axios from 'axios';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-// Mock data for a specific user
-const userMedicalRecords = [
-    {
-        id: '1',
-        patientName: 'John Doe',
-        doctorName: 'Dr. Bob Stanfield',
-        date: '2024-12-03',
-        illness: 'General Consultation',
-        notes: 'No significant health issues.',
-    }
-];
 
 export default function MedicalRecordsPage() {
-    const userName = 'John Doe'; // Replace with dynamic user data if available
+    const userName = "ABD"
+    const [patientId, setPatientId] = useState('')
     const initialMedicalData = [{
         patientId: {
             userId: {
@@ -38,7 +27,14 @@ export default function MedicalRecordsPage() {
         note: '',
     }]
 
-    const patientId = localStorage.getItem('patientId')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const patientId = localStorage.getItem('patientId')
+            if (patientId) {
+                setPatientId(patientId)
+            }
+        }
+    }, []);
 
     const [formData, setFormData] = useState<any[]>(initialMedicalData);
 

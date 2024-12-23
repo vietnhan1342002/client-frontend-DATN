@@ -133,7 +133,7 @@ export default function ChatBox() {
             {isChatboxVisible && (
                 <div className="fixed bottom-24 right-6 bg-white w-80 h-96 border border-gray-300 shadow-lg rounded-lg p-4 z-40 flex flex-col">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold">Chat với chúng tôi</h3>
+                        <h3 className="text-lg font-semibold">Chat with us</h3>
                         <button
                             onClick={toggleChatbox} // Đóng chatbox
                             className="text-gray-500 hover:text-gray-700"

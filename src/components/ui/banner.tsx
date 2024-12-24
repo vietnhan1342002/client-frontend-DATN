@@ -40,8 +40,11 @@ export default function Banner() {
     const initialFormData = {
         name: '',
         phone: '',
-        phoneError: ''
+        email: '',  // Thêm trường email
+        phoneError: '',
+        emailError: ''  // Thêm lỗi cho email
     }
+
     const [formData, setFormData] = useState(initialFormData);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +54,12 @@ export default function Banner() {
         const validatePhone = (phone: string) => {
             const regex = /^(0[3-9])[0-9]{8}$/;
             return regex.test(phone);
+        };
+
+        // Hàm validate email
+        const validateEmail = (email: string) => {
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return regex.test(email);
         };
 
         if (id === 'phone') {
@@ -79,6 +88,26 @@ export default function Banner() {
                     phoneError: ''
                 }));
             }
+        } else if (id === 'email') {
+            if (value.length === 0) {
+                setFormData(prev => ({
+                    ...prev,
+                    [id]: value,
+                    emailError: 'Email is required.'
+                }));
+            } else if (!validateEmail(value)) {
+                setFormData(prev => ({
+                    ...prev,
+                    [id]: value,
+                    emailError: 'Invalid email address.'
+                }));
+            } else {
+                setFormData(prev => ({
+                    ...prev,
+                    [id]: value,
+                    emailError: ''
+                }));
+            }
         } else {
             setFormData(prev => ({
                 ...prev,
@@ -86,6 +115,7 @@ export default function Banner() {
             }));
         }
     };
+
 
     const fetchDoctorBySpecialtyId = async (specialtyId: string) => {
         try {
@@ -201,9 +231,10 @@ export default function Banner() {
     const handleRegistrationAndAppointment = async () => {
         try {
             const user = await axios.post('http://localhost:8080/api/v1/user-auth/register', {
-                password: formData.phone,
                 fullName: formData.name,
-                phoneNumber: formData.phone
+                phoneNumber: formData.phone,
+                email: formData.email,
+                password: formData.phone
             });
 
             const patient = await axios.get(`http://localhost:8080/api/v1/patients/user/${user.data._id}`);
@@ -291,6 +322,22 @@ export default function Banner() {
                                     </div>
                                 </div>
                             )}
+                            <div>
+                                <label htmlFor="email" className="block  col-span-2 text-white text-sm">Email <span className="text-white">*</span></label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    onChange={handleChange}
+                                    value={formData.email}
+                                    placeholder="example@domain.com"
+                                    className="mt-1 col-span-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                />
+                                {formData.emailError && (
+                                    <p className="text-red-500 text-xs font-bold absolute top-0 right-0 mt-1 mr-1 p-2 bg-red-100 rounded-md shadow-md">
+                                        {formData.emailError}
+                                    </p>
+                                )}
+                            </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {/* Service Dropdown */}

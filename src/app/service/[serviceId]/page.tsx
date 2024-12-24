@@ -57,25 +57,26 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
 
     const handleSelectService = async (serviceId: string) => {
         try {
+            setDoctorDetail([]);
+            setNoDoctors(false);
+
             const response = await axios.get(`http://localhost:8080/api/v1/specialties/${serviceId}`);
             setServiceDetailData(response.data);
 
             const doctorResponse = await axios.get(`http://localhost:8080/api/v1/filter/specialties/doctors?specialtyId=${serviceId}`);
             const doctors = doctorResponse.data;
 
-            // Kiểm tra và cập nhật trạng thái khi không có bác sĩ
             if (Array.isArray(doctors) && doctors.length === 0) {
                 setNoDoctors(true);
-                setDoctorDetail([]);  // Nếu không có bác sĩ, xóa danh sách
             } else {
-                setNoDoctors(false);
-                setDoctorDetail(doctors);  // Cập nhật danh sách bác sĩ
+                setDoctorDetail(doctors);
             }
         } catch (error) {
             console.error("Error fetching service or doctor details:", error);
             toast.error('Error fetching service or doctor details');
         }
     };
+
 
     return (
         <div className="bg-gray-50 min-h-screen py-10 px-4">

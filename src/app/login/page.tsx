@@ -38,7 +38,7 @@ export default function LoginPage() {
                 localStorage.setItem('patientId', patientId.data)
             }
             toast.success('Login successful!');
-            router.push('/profile')
+            router.push('/')
 
         } catch (error: any) {
             if (error.response) {
@@ -69,7 +69,6 @@ export default function LoginPage() {
         }
         fetchLogin()
         localStorage.removeItem('phoneNumber');
-        console.log("Form submitted with: ", formLogin);
     };
 
     return (

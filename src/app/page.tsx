@@ -12,6 +12,7 @@ import Service from "@/components/ui/service";
 import Specialty from "@/components/ui/specialty";
 import Footer from "@/components/ui/footer";
 import Doctors from '@/components/ui/doctor';
+import Navbar from '@/components/ui/navbar';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export default function Home() {
         setIsLoggedIn(true);
       }
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const fetchServices = async () => {
     dispatch(setServiceLoading(true));

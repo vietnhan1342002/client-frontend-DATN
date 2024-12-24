@@ -30,7 +30,6 @@ export default function Banner() {
     useEffect(() => {
         const checkLoginStatus = () => {
             const accessToken = localStorage.getItem('accessToken')
-            console.log(accessToken);
             if (accessToken) {
                 setIsLoggedIn(true)
             }

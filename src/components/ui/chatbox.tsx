@@ -187,24 +187,22 @@ export default function ChatBox() {
                             </div>
                         )}
 
-                        {/* Ref để cuộn đến cuối tin nhắn */}
                         <div ref={chatEndRef}></div>
                     </div>
 
-                    {/* Input gửi tin nhắn trong khung chat */}
                     <div className="flex items-center">
                         <input
                             type="text"
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)} // Cập nhật tin nhắn
+                            onChange={(e) => setMessage(e.target.value)}
                             placeholder="Nhập tin nhắn..."
                             className="flex-1 border rounded-md p-2 focus:outline-none focus:ring focus:border-sky-500"
                         />
                         <button
-                            onClick={handleSendMessage} // Gửi tin nhắn
+                            onClick={handleSendMessage}
                             className="bg-blue-500 text-white p-2 ml-2 rounded-md hover:bg-blue-400 transition"
                         >
-                            Gửi
+                            Send
                         </button>
                     </div>
                 </div>

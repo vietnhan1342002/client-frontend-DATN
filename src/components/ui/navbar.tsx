@@ -13,7 +13,6 @@ export default function Navbar() {
     const dispatch = useDispatch();
     const router = useRouter();
     const { departments, loading } = useSelector((state: RootState) => state.departments); // Access state from Redux store
-    const [token, setToken] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isSpecialtyDropdownOpen, setSpecialtyDropdownOpen] = useState(false);
     const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -21,41 +20,39 @@ export default function Navbar() {
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-    const fetchSpecialties = async (departmentId: string) => {
-        try {
-            const res = await axios.get(`http://localhost:8080/api/v1/filter/specialties?departmentId=${departmentId}`)
-        } catch (error) {
-            console.error("Error fetching departments:", error);
-        }
-    };
-
-
     const toggleSpecialtyDropdown = () => setSpecialtyDropdownOpen(!isSpecialtyDropdownOpen);
     const toggleProfileDropdown = () => setProfileDropdownOpen(!isProfileDropdownOpen);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const storedToken = localStorage.getItem('accessToken');
-            setToken(storedToken);
-            setIsLoggedIn(!!storedToken);
-        }
-    }, []);
-
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setIsLoggedIn(!!token);
+        const checkLoginStatus = () => {
+            const accessToken = localStorage.getItem('accessToken');
+            setIsLoggedIn(!!accessToken);
         };
 
-        handleStorageChange();
+        checkLoginStatus();
+
+        const handleStorageChange = () => {
+            console.log('Local Storage changed!');
+            checkLoginStatus();
+        };
+
         window.addEventListener('storage', handleStorageChange);
+
+        // Đồng bộ trong cùng tab
+        const interval = setInterval(checkLoginStatus, 1000);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(interval);
+        };
+    }, []);
+
+
+    useEffect(() => {
         if (departments.length === 0) {
             fetchDepartments();
         }
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-
-    }, [token, dispatch, departments.length]);
+    }, [dispatch, departments.length]);
 
     const handleDepartmentSelect = (id: string) => {
         setSelectedDepartmentId(id);
@@ -82,6 +79,7 @@ export default function Navbar() {
         setIsLoggedIn(false);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('patientId');
+        window.location.reload()
         router.push('/')
     };
 
@@ -150,19 +148,6 @@ export default function Navbar() {
                     </nav>
 
                     <div className="flex items-center gap-4">
-                        <button className="text-white hover:text-gray-300">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-6 h-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" strokeWidth="2" />
-                            </svg>
-                        </button>
-
                         <div className="flex items-center gap-4">
                             {isLoggedIn ? (
                                 <div className="relative" ref={dropdownRef}>

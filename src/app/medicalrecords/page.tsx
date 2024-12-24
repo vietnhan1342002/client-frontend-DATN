@@ -2,11 +2,14 @@
 
 import PrivateRoute from '@/PrivateRouter';
 import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 
 export default function MedicalRecordsPage() {
+    const router = useRouter()
     const userName = "ABD"
     const [patientId, setPatientId] = useState('')
     const initialMedicalData = [{
@@ -68,25 +71,25 @@ export default function MedicalRecordsPage() {
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Doctor Name</th>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Disease</th>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Notes</th>
-                                {/* <th className="text-left px-6 py-3 text-gray-700 font-semibold">Details</th> */}
+                                <th className="text-left px-6 py-3 text-gray-700 font-semibold">Details</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {formData.map((record) => (
-                                <tr key={record._id} className="border-t hover:bg-gray-100">
+                            {formData.map((record, index) => (
+                                <tr key={record._id || index} className="border-t hover:bg-gray-100">
                                     <td className="px-6 py-4 text-gray-600">{record.appointmentId?.appointmentDate}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.patientId?.userId?.fullName}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.doctorId?.userId?.fullName}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.diagnosis}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.note}</td>
-                                    {/* <td className="px-6 py-4">
-                                        <Link
-                                            href={`/medicalrecorddetail/${record._id}`}
+                                    <td className="px-6 py-4">
+                                        <button
+                                            onClick={() => router.push(`/medicalrecorddetail?id=${record._id}`)}
                                             className="text-blue-600 hover:underline font-medium"
                                         >
                                             View Details
-                                        </Link>
-                                    </td> */}
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

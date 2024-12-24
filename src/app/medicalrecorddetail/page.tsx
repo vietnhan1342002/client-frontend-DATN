@@ -1,74 +1,144 @@
-export default function MedicalRecord() {
+'use client'
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Thêm để sử dụng điều hướng
+
+interface DetailMedicalRecord {
+    _id: string;
+    disease: string;
+    medicalRecordId: {
+        diagnosis: string;
+        note: string;
+    }
+    symptoms: string;
+    treatmentPlan: string;
+}
+
+interface Medication {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    sideEffects: string;
+    unit: string;
+    usageInstructions: string;
+}
+
+interface PrescriptionDetail {
+    _id: string;
+    medicationId: Medication;
+    prescriptionId: string;
+    quantityPrescribed: number;
+}
+
+export default function MedicalDetailRecord() {
+    const searchParams = useSearchParams();
+    const router = useRouter();  // Sử dụng useRouter để điều hướng
+    const [detailMedicalRecord, setDetailMedicalRecord] = useState<DetailMedicalRecord | null>(null);
+    const [prescriptions, setPrescriptions] = useState<PrescriptionDetail[]>([]);
+    const medicalId = searchParams.get('id');
+
+    const fetchDetailMedicalRecord = async (medicalId: string) => {
+        const res = await axios.get(`http://localhost:8080/api/v1/detail-medical-record/medical-record/${medicalId}`);
+        const detailMedicalRecord = res.data;
+        if (res.data) {
+            setDetailMedicalRecord(detailMedicalRecord);
+            fetchPrescription(detailMedicalRecord._id);
+        }
+    }
+
+    const fetchPrescription = async (medicalDetailId: string) => {
+        const res = await axios.get(`http://localhost:8080/api/v1/prescriptions/detail-medical-record/${medicalDetailId}`);
+        const prescriptionId = res.data[0]._id;
+        if (prescriptionId) {
+            fetchMedicationByPrescriptionId(prescriptionId);
+        }
+    }
+
+    const fetchMedicationByPrescriptionId = async (prescriptionId: string) => {
+        const res = await axios.get(`http://localhost:8080/api/v1/prescription-details/prescription/${prescriptionId}`);
+        setPrescriptions(res.data);
+    }
+
+    useEffect(() => {
+        if (medicalId) {
+            fetchDetailMedicalRecord(medicalId);
+        }
+    }, [medicalId]);
+
+    if (!detailMedicalRecord) {
+        return (
+            <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-center">
+                <div className="max-w-lg bg-white shadow-lg rounded-lg p-6 animate-pulse">
+                    <p className="text-center text-gray-500">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-gray-100 py-10">
-            <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-                <h1 className="text-2xl font-bold text-blue-900 mb-6">Medical Record Detail</h1>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Record Information */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Record ID</label>
-                        <p className="text-gray-900 bg-gray-100 p-2 rounded">#12345</p>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Date</label>
-                        <p className="text-gray-900 bg-gray-100 p-2 rounded">2024-12-03</p>
-                    </div>
-
-                    {/* Patient Information */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Patient Name</label>
-                        <p className="text-gray-900 bg-gray-100 p-2 rounded">John Doe</p>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Doctor Name</label>
-                        <p className="text-gray-900 bg-gray-100 p-2 rounded">Dr. Smith</p>
-                    </div>
+        <div className="min-h-screen bg-gray-50 py-10">
+            <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6">
+                <div className="flex items-center mb-6 relative">
+                    <button
+                        onClick={() => router.back()}  // Quay lại trang trước
+                        className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none"
+                    >
+                        Back
+                    </button>
+                    <h1 className="text-3xl font-extrabold text-gray-700 absolute left-1/2 transform -translate-x-1/2">Medical Record Detail</h1>
                 </div>
 
-                {/* Symptoms and Diagnosis */}
-                <div className="mt-6">
-                    <label className="block text-sm font-medium text-gray-700">Symptoms</label>
-                    <p className="text-gray-900 bg-gray-100 p-2 rounded">Fever, Cough</p>
-                </div>
-                <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">Disease</label>
-                    <p className="text-gray-900 bg-gray-100 p-2 rounded">Common Cold</p>
-                </div>
 
-                {/* Medication */}
-                <div className="mt-6">
-                    <h2 className="text-xl font-semibold text-blue-900 mb-4">Medications</h2>
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
-                        <table className="w-full text-left text-sm text-gray-600">
-                            <thead className="bg-blue-100 text-gray-800 font-medium">
-                                <tr>
-                                    <th className="px-4 py-2">Medicine</th>
-                                    <th className="px-4 py-2">Quantity</th>
-                                    <th className="px-4 py-2">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="px-4 py-2">Paracetamol</td>
-                                    <td className="px-4 py-2">10</td>
-                                    <td className="px-4 py-2">$5</td>
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-2">Cough Syrup</td>
-                                    <td className="px-4 py-2">1</td>
-                                    <td className="px-4 py-2">$10</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <h2 className="text-3xl text-center font-semibold text-indigo-800 mb-3">Disease: {detailMedicalRecord.disease}</h2>
+
+                {/* Chia màn hình thành 2 cột */}
+                <div className="flex gap-8">
+                    <div className="flex-1 space-y-6">
+                        {/* Disease and Diagnosis/Note Group */}
+                        <div className="bg-blue-50 p-6 rounded-lg shadow-md">
+                            <div className="space-y-2">
+                                <p className="text-lg text-blue-700 font-medium">Diagnosis:</p>
+                                <p className="text-gray-700 bg-white p-4 rounded-lg">{detailMedicalRecord.medicalRecordId.diagnosis}</p>
+                            </div>
+                            <div className="space-y-2 mt-4">
+                                <p className="text-lg text-blue-700 font-medium">Note:</p>
+                                <p className="text-gray-700 bg-white p-4 rounded-lg">{detailMedicalRecord.medicalRecordId.note}</p>
+                            </div>
+                        </div>
+
+                        {/* Symptoms and Treatment Plan Group */}
+                        <div className="bg-green-50 p-6 rounded-lg shadow-md">
+                            <h2 className="text-2xl font-semibold text-green-700 mb-3">Symptoms</h2>
+                            <p className="text-gray-700 bg-white p-4 rounded-lg">{detailMedicalRecord.symptoms}</p>
+                        </div>
+                        <div className="bg-teal-50 p-6 rounded-lg shadow-md">
+                            <h2 className="text-2xl font-semibold text-teal-700 mb-3">Treatment Plan</h2>
+                            <p className="text-gray-700 bg-white p-4 rounded-lg">{detailMedicalRecord.treatmentPlan}</p>
+                        </div>
                     </div>
-                </div>
 
-                {/* Total Price */}
-                <div className="mt-6 flex justify-end">
-                    <p className="text-lg font-semibold text-gray-800">
-                        Total: <span className="text-green-600">$15</span>
-                    </p>
+                    {/* Medication List */}
+                    <div className="flex-1 space-y-6">
+                        {prescriptions.length > 0 && (
+                            <div className="bg-yellow-50 p-6 rounded-lg shadow-md">
+                                <h2 className="text-2xl font-semibold text-yellow-700 mb-3">Medications Prescribed</h2>
+                                <div className="space-y-4">
+                                    {prescriptions.map((prescription) => (
+                                        <div key={prescription._id} className="border-b pb-4">
+                                            <h3 className="text-xl font-semibold text-yellow-600">{prescription.medicationId.name}</h3>
+                                            <p className="text-gray-700"><strong>Description:</strong> {prescription.medicationId.description}</p>
+                                            <p className="text-gray-700"><strong>Price:</strong> {prescription.medicationId.price} VND</p>
+                                            <p className="text-gray-700"><strong>Side Effects:</strong> {prescription.medicationId.sideEffects}</p>
+                                            <p className="text-gray-700"><strong>Usage Instructions:</strong> {prescription.medicationId.usageInstructions}</p>
+                                            <p className="text-gray-700"><strong>Quantity Prescribed:</strong> {prescription.quantityPrescribed} {prescription.medicationId.unit}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

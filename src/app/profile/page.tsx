@@ -7,28 +7,28 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function PatientProfile() {
-    const [patientId, setPatientId] = useState('')
+    const [patientId, setPatientId] = useState('');
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const patientId = localStorage.getItem('patientId')
+            const patientId = localStorage.getItem('patientId');
             if (patientId) {
-                setPatientId(patientId)
+                setPatientId(patientId);
             }
         }
     }, []);
-
 
     const initialData = {
         address: "",
         dateOfBirth: "",
         gender: "",
+        email: "", // Thêm email vào dữ liệu ban đầu
         userId: {
             fullName: "",
         },
     };
 
-    const [formData, setFormData] = useState(initialData)
-    const [submittedData, setSubmittedData] = useState(initialData)
+    const [formData, setFormData] = useState(initialData);
+    const [submittedData, setSubmittedData] = useState(initialData);
 
     const fetchPatient = async (patientId: string) => {
         try {
@@ -43,18 +43,18 @@ export default function PatientProfile() {
             setFormData(patient);
             setSubmittedData(patient);
         } catch (error) {
-            toast.error('Error')
+            toast.error('Error');
             console.error('Error fetching patient data:', error);
         }
-    }
+    };
 
     useEffect(() => {
         if (patientId) {
             console.log(patientId);
 
-            fetchPatient(patientId)
+            fetchPatient(patientId);
         }
-    }, [patientId])
+    }, [patientId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -71,6 +71,11 @@ export default function PatientProfile() {
                 ...prev,
                 dateOfBirth: value,
             }));
+        } else if (name === 'email') {
+            setSubmittedData(prev => ({
+                ...prev,
+                email: value, // Cập nhật giá trị email
+            }));
         } else {
             setSubmittedData(prev => ({
                 ...prev,
@@ -86,6 +91,7 @@ export default function PatientProfile() {
                     dateOfBirth: submittedData.dateOfBirth,
                     address: submittedData.address,
                     gender: submittedData.gender,
+                    email: submittedData.email, // Cập nhật email
                 },
                 userAuth: {
                     fullName: submittedData.userId.fullName,
@@ -104,7 +110,7 @@ export default function PatientProfile() {
         if (patientId) {
             fetchUpdatePatient(patientId);
         }
-    }
+    };
 
     return (
         <PrivateRoute>
@@ -138,6 +144,9 @@ export default function PatientProfile() {
                             </p>
                             <p className="text-gray-500 mt-2">
                                 <strong>Address:</strong> {formData.address || '123 Đường ABC, Phường XYZ, Quận 1, TP.HCM'}
+                            </p>
+                            <p className="text-gray-500 mt-2">
+                                <strong>Email:</strong> {formData.email || 'example@domain.com'} {/* Hiển thị email */}
                             </p>
                         </div>
                     </div>
@@ -173,6 +182,21 @@ export default function PatientProfile() {
                             />
                         </div>
 
+                        {/* Email */}
+                        <div className="flex flex-col">
+                            <label htmlFor="email" className="mb-2 text-gray-700">
+                                Email
+                            </label>
+                            <input
+                                name="email"
+                                type="email"
+                                onChange={handleChange}
+                                value={submittedData.email}
+                                placeholder="example@domain.com"
+                                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
                         {/* Address */}
                         <div className="flex flex-col">
                             <label htmlFor="address" className="mb-2 text-gray-700">
@@ -187,7 +211,7 @@ export default function PatientProfile() {
                                 className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-                        <div className="mt-8">
+                        <div className="mt-8 col-span-2">
                             <button
                                 type="submit"
                                 className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-600 transition duration-300"

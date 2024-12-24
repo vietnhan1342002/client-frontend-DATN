@@ -12,16 +12,21 @@ import { useRouter } from 'next/navigation';
 export default function Navbar() {
     const dispatch = useDispatch();
     const router = useRouter();
-    const { departments, loading } = useSelector((state: RootState) => state.departments); // Access state from Redux store
+    const { departments, loading } = useSelector((state: RootState) => state.departments);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isSpecialtyDropdownOpen, setSpecialtyDropdownOpen] = useState(false);
     const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string | null>(null);
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const profileDropdownRef = useRef<HTMLDivElement | null>(null);
 
     const toggleSpecialtyDropdown = () => setSpecialtyDropdownOpen(!isSpecialtyDropdownOpen);
     const toggleProfileDropdown = () => setProfileDropdownOpen(!isProfileDropdownOpen);
+
+    const handleCloseDropdown = () => {
+        setProfileDropdownOpen(false);
+    };
 
     useEffect(() => {
         const checkLoginStatus = () => {
@@ -38,7 +43,6 @@ export default function Navbar() {
 
         window.addEventListener('storage', handleStorageChange);
 
-        // Đồng bộ trong cùng tab
         const interval = setInterval(checkLoginStatus, 1000);
 
         return () => {
@@ -46,7 +50,6 @@ export default function Navbar() {
             clearInterval(interval);
         };
     }, []);
-
 
     useEffect(() => {
         if (departments.length === 0) {
@@ -57,15 +60,14 @@ export default function Navbar() {
     const handleDepartmentSelect = (id: string) => {
         setSelectedDepartmentId(id);
         setSpecialtyDropdownOpen(false);
-        router.push(`/service/${id}`)
+        router.push(`/service/${id}`);
     };
 
     const fetchDepartments = async () => {
         try {
             const response = await axios.get("http://localhost:8080/api/v1/departments");
             const departmentsData = response.data.result || [];
-            departmentsData.forEach((department: { departmentName: string }) => {
-            });
+            departmentsData.forEach((department: { departmentName: string }) => { });
 
             dispatch(setDepartments(departmentsData));
         } catch (error) {
@@ -73,15 +75,30 @@ export default function Navbar() {
         }
     };
 
-
-    // Xử lý logout
     const handleLogout = () => {
         setIsLoggedIn(false);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('patientId');
-        window.location.reload()
-        router.push('/')
+        window.location.reload();
+        router.push('/');
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setSpecialtyDropdownOpen(false);
+            }
+            if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+                setProfileDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
 
     return (
         <header className="bg-white border-b">
@@ -144,13 +161,12 @@ export default function Navbar() {
                         </div>
                         <a href="/doctor" className="hover:underline">Doctors</a>
                         <a href="/about" className="hover:underline">About us</a>
-                        {/* <a href="/contact" className="hover:underline">Contact</a> */}
                     </nav>
 
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-4">
                             {isLoggedIn ? (
-                                <div className="relative" ref={dropdownRef}>
+                                <div className="relative" ref={profileDropdownRef}>
                                     <button
                                         onClick={toggleProfileDropdown}
                                         className="flex items-center gap-2 bg-blue-200 text-blue-900 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400"
@@ -160,10 +176,10 @@ export default function Navbar() {
                                     </button>
                                     {isProfileDropdownOpen && (
                                         <div className="absolute right-0 bg-white text-black shadow-lg mt-2 py-2 rounded-md w-48 z-10">
-                                            <Link href="/profile" className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                                            <Link href="/profile" className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={handleCloseDropdown}>
                                                 Edit Profile
                                             </Link>
-                                            <Link href="/medicalrecords" className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                                            <Link href="/medicalrecords" className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={handleCloseDropdown}>
                                                 Medical Records
                                             </Link>
                                             <button

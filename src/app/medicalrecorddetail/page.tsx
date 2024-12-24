@@ -1,8 +1,7 @@
-'use client'
+'use client';
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Thêm để sử dụng điều hướng
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 interface DetailMedicalRecord {
     _id: string;
@@ -32,11 +31,11 @@ interface PrescriptionDetail {
     quantityPrescribed: number;
 }
 
-export default function MedicalDetailRecord() {
-    const searchParams = useSearchParams();
-    const router = useRouter();  // Sử dụng useRouter để điều hướng
+function MedicalRecordContent() {
+    const router = useRouter();
     const [detailMedicalRecord, setDetailMedicalRecord] = useState<DetailMedicalRecord | null>(null);
     const [prescriptions, setPrescriptions] = useState<PrescriptionDetail[]>([]);
+    const searchParams = useSearchParams();
     const medicalId = searchParams.get('id');
 
     const fetchDetailMedicalRecord = async (medicalId: string) => {
@@ -50,11 +49,13 @@ export default function MedicalDetailRecord() {
 
     const fetchPrescription = async (medicalDetailId: string) => {
         const res = await axios.get(`http://localhost:8080/api/v1/prescriptions/detail-medical-record/${medicalDetailId}`);
-        const prescriptionId = res.data[0]._id;
-        if (prescriptionId) {
-            fetchMedicationByPrescriptionId(prescriptionId);
+        if (res.data && res.data.length > 0) {
+            const prescriptionId = res.data[0]._id;
+            if (prescriptionId) {
+                fetchMedicationByPrescriptionId(prescriptionId);
+            }
         }
-    }
+    };
 
     const fetchMedicationByPrescriptionId = async (prescriptionId: string) => {
         const res = await axios.get(`http://localhost:8080/api/v1/prescription-details/prescription/${prescriptionId}`);
@@ -65,7 +66,7 @@ export default function MedicalDetailRecord() {
         if (medicalId) {
             fetchDetailMedicalRecord(medicalId);
         }
-    }, [medicalId]);
+    }, [medicalId])
 
     if (!detailMedicalRecord) {
         return (
@@ -142,5 +143,13 @@ export default function MedicalDetailRecord() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function MedicalRecordDetail() {
+    return (
+        <Suspense fallback={<p>Loading medical record details...</p>}>
+            <MedicalRecordContent />
+        </Suspense>
     );
 }

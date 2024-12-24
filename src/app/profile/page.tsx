@@ -120,7 +120,7 @@ export default function PatientProfile() {
                         {/* Avatar */}
                         <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-blue-500">
                             <Image
-                                src="/doctor-profile-1.jpg" // Đặt ảnh avatar trong public/
+                                src="/patient.jpg" // Đặt ảnh avatar trong public/
                                 alt="Patient Avatar"
                                 layout="fill"
                                 objectFit="cover"

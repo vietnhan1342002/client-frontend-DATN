@@ -9,28 +9,34 @@ import Footer from "@/components/ui/footer";
 
 export default function Doctor() {
     const [doctors, setDoctors] = useState([]);
-    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchDoctors = async () => {
-            setLoading(true); // Bắt đầu trạng thái loading
-            try {
-                const response = await axios.get('http://localhost:8080/api/v1/doctors'); // URL API doctors
-                const doctorList = response.data.result; // Giả định API trả về trong `result`
-                setDoctors(doctorList); // Lưu danh sách bác sĩ vào state
-            } catch (err) {
-                console.error('Error fetching doctors:', err);
-            } finally {
-                setLoading(false); // Kết thúc trạng thái loading
-            }
-        };
-
-        fetchDoctors();
-    }, []);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 5; // Kích thước mỗi trang (số bác sĩ trên mỗi trang)
 
     const handleSelectDoctor = (id: string) => {
         console.log("Selected doctor ID:", id);
     };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const fetchDoctors = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/doctors?current=${currentPage}&pageSize=${pageSize}`);
+            const { result, totalPages } = response.data;
+            const doctorList = result;
+            setDoctors(doctorList);
+            setTotalPages(totalPages);
+        } catch (err) {
+            console.error('Error fetching doctors:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchDoctors();
+    }, [currentPage]);
 
     return (
         <div>
@@ -45,9 +51,55 @@ export default function Doctor() {
                 {/* Doctors Section */}
                 <Doctors
                     doctors={doctors}
-                    loading={loading}
+                    loading={false}
                     onSelectDoctor={handleSelectDoctor} // Truyền hàm onSelectDoctor
                 />
+
+                {/* Pagination Controls */}
+                <div className="flex justify-center items-center space-x-4 mt-8">
+                    <button
+                        onClick={() => handlePageChange(1)}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 bg-blue-900 text-white rounded disabled:bg-gray-300"
+                    >
+                        First
+                    </button>
+
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 bg-blue-900 text-white rounded disabled:bg-gray-300"
+                    >
+                        Previous
+                    </button>
+
+                    {/* Hiển thị danh sách số trang */}
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            className={`px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white text-blue-900 border'}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 bg-blue-900 text-white rounded disabled:bg-gray-300"
+                    >
+                        Next
+                    </button>
+
+                    <button
+                        onClick={() => handlePageChange(totalPages)}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 bg-blue-900 text-white rounded disabled:bg-gray-300"
+                    >
+                        Last
+                    </button>
+                </div>
 
                 <section className="relative bg-blue-900 text-white py-16">
                     <div className="max-w-4xl mx-auto text-center">
@@ -66,13 +118,6 @@ export default function Doctor() {
                         {/* Tác giả */}
                         <h3 className="text-xl font-semibold">John Doe</h3>
                         <p className="text-sm text-gray-400">CEO, HealthCare</p>
-
-                        {/* Thanh điều hướng */}
-                        <div className="flex justify-center space-x-2 mt-8 ">
-                            <div className="w-3 h-3 rounded-full bg-white hover:bg-gray-400 cursor-pointer"></div>
-                            <div className="w-3 h-3 rounded-full bg-white hover:bg-gray-400 cursor-pointer"></div>
-                            <div className="w-3 h-3 rounded-full bg-white hover:bg-gray-400 cursor-pointer"></div>
-                        </div>
                     </div>
                 </section>
 

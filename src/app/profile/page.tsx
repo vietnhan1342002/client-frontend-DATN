@@ -38,6 +38,8 @@ export default function PatientProfile() {
                 const formattedDate = patient.dateOfBirth.split('T')[0];
                 patient.dateOfBirth = formattedDate;
             }
+            console.log(patient);
+
             setFormData(patient);
             setSubmittedData(patient);
         } catch (error) {
@@ -48,9 +50,11 @@ export default function PatientProfile() {
 
     useEffect(() => {
         if (patientId) {
+            console.log(patientId);
+
             fetchPatient(patientId)
         }
-    }, [])
+    }, [patientId])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

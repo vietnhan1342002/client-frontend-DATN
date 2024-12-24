@@ -320,25 +320,24 @@ export default function Banner() {
                                             </p>
                                         )}
                                     </div>
+                                    <div className="col-span-2"> {/* Đảm bảo email chiếm cả 2 cột */}
+                                        <label htmlFor="email" className="block text-white text-sm">Email <span className="text-white">*</span></label>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            onChange={handleChange}
+                                            value={formData.email}
+                                            placeholder="example@domain.com"
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                        />
+                                        {formData.emailError && (
+                                            <p className="text-red-500 text-xs font-bold absolute top-0 right-0 mt-1 mr-1 p-2 bg-red-100 rounded-md shadow-md">
+                                                {formData.emailError}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             )}
-                            <div>
-                                <label htmlFor="email" className="block  col-span-2 text-white text-sm">Email <span className="text-white">*</span></label>
-                                <input
-                                    id="email"
-                                    type="email"
-                                    onChange={handleChange}
-                                    value={formData.email}
-                                    placeholder="example@domain.com"
-                                    className="mt-1 col-span-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                />
-                                {formData.emailError && (
-                                    <p className="text-red-500 text-xs font-bold absolute top-0 right-0 mt-1 mr-1 p-2 bg-red-100 rounded-md shadow-md">
-                                        {formData.emailError}
-                                    </p>
-                                )}
-                            </div>
-
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {/* Service Dropdown */}
                                 <div>
@@ -432,9 +431,9 @@ export default function Banner() {
 
                             <button
                                 type="submit"
-                                disabled={(!isLoggedIn && (!formData.name || !formData.phone || !selectedTime)) || !selectedTime}
+                                disabled={(!isLoggedIn && (!formData.name || !formData.email || !formData.phone || !selectedTime)) || !selectedTime}
                                 className={`mt-4 w-full text-xl font-bold py-2 px-4 rounded-lg focus:outline-none
-    ${(!isLoggedIn && formData.name && formData.phone && !formData.phoneError && selectedTime) || isLoggedIn ? 'bg-white text-black hover:bg-blue-200' : 'bg-gray-400 text-gray-800 cursor-not-allowed'}`}
+    ${(!isLoggedIn && formData.name && formData.phone && formData.email && !formData.phoneError && selectedTime) || isLoggedIn ? 'bg-white text-black hover:bg-blue-200' : 'bg-gray-400 text-gray-800 cursor-not-allowed'}`}
                             >
                                 Book
                             </button>

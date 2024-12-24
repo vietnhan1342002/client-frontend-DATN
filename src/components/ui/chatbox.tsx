@@ -22,30 +22,27 @@ export default function ChatBox() {
         }
     };
 
-
     useEffect(() => {
         scrollToBottom();
     }, [chatHistory]);
 
     const handleSendMessage = async () => {
+        setMessage('');
         if (message.trim()) {
             setChatHistory((prev) => [...prev, { type: 'user', content: message }]);
 
             const botResponse = await fetchMessage(message);
             if (botResponse) {
-                console.log(botResponse);
                 setChatHistory((prev) => [...prev, { type: 'bot', content: botResponse.message }]);
                 if (botResponse.dateList?.length) {
-                    setDateList(botResponse.dateList); // Cập nhật danh sách ngày
+                    setDateList(botResponse.dateList);
                 }
                 if (botResponse.shiftList?.length) {
-                    setShiftList(botResponse.shiftList); // Cập nhật danh sách ca làm việc
+                    setShiftList(botResponse.shiftList);
                 }
             }
-            setMessage(''); // Xóa input tin nhắn
         }
     };
-
 
     const handleDateSelection = async (selectedDate: string) => {
         setChatHistory((prev) => [
@@ -79,26 +76,16 @@ export default function ChatBox() {
 
     };
 
-
     const fetchMessage = async (message: string): Promise<{ message: string; dateList: string[], shiftList: string[] }> => {
         try {
             const response = await axios.post(
                 'http://localhost:8080/api/v1/chat/message',
-                // 'http://localhost:8080/api/v1/chat/message',
                 { message }
             );
             const data = response.data.response;
-            console.log('API response:', data);
             if (!data) {
                 throw new Error("Invalid response from server.");
             }
-            if (data && data.shiftList) {
-                const shifts: string[] = data.shiftList.split(',').map((shift: string) => shift.trim());
-                setShiftList(shifts);  // Cập nhật danh sách ca làm việc
-            } else {
-                setShiftList([]);
-            }
-
             return {
                 message: data.message || 'No message received.',
                 dateList: data.dateList || [],
@@ -107,6 +94,13 @@ export default function ChatBox() {
         } catch (err) {
             console.error('Error fetching message:', err);
             return { message: 'Sorry, something went wrong.', dateList: [], shiftList: [] };
+        }
+    };
+
+    // Hàm xử lý sự kiện khi nhấn phím Enter
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
         }
     };
 
@@ -195,6 +189,7 @@ export default function ChatBox() {
                             type="text"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={handleKeyDown} // Thêm sự kiện keyDown
                             placeholder="Nhập tin nhắn..."
                             className="flex-1 border rounded-md p-2 focus:outline-none focus:ring focus:border-sky-500"
                         />

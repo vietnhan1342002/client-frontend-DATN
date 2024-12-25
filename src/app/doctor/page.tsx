@@ -12,7 +12,7 @@ export default function Doctor() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const pageSize = 5; // Kích thước mỗi trang (số bác sĩ trên mỗi trang)
+    const pageSize = 6; // Kích thước mỗi trang (số bác sĩ trên mỗi trang)
 
     const handleSelectDoctor = (id: string) => {
         console.log("Selected doctor ID:", id);

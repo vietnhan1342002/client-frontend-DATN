@@ -31,7 +31,7 @@ export default function Appointment() {
 
     const fetchAppointment = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/api/v1/appointments/674ff4882f0e9bce9578b73f");
+            const res = await axios.get("http://13.211.141.240:8080/api/v1/appointments/674ff4882f0e9bce9578b73f");
             setAppointment(res.data.result);
         } catch (error) {
             console.error("Failed to fetch appointment:", error);

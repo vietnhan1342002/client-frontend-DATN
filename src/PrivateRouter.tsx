@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const verifyToken = async (token: string): Promise<boolean> => {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/user-auth/verify-token', {
+        const response = await axios.get('http://13.211.141.240:8080/api/v1/user-auth/verify-token', {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` }
         });

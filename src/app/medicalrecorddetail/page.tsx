@@ -39,7 +39,7 @@ function MedicalRecordContent() {
     const medicalId = searchParams.get('id');
 
     const fetchDetailMedicalRecord = async (medicalId: string) => {
-        const res = await axios.get(`http://localhost:8080/api/v1/detail-medical-record/medical-record/${medicalId}`);
+        const res = await axios.get(`http://13.211.141.240:8080/api/v1/detail-medical-record/medical-record/${medicalId}`);
         const detailMedicalRecord = res.data;
         if (res.data) {
             setDetailMedicalRecord(detailMedicalRecord);
@@ -48,7 +48,7 @@ function MedicalRecordContent() {
     }
 
     const fetchPrescription = async (medicalDetailId: string) => {
-        const res = await axios.get(`http://localhost:8080/api/v1/prescriptions/detail-medical-record/${medicalDetailId}`);
+        const res = await axios.get(`http://13.211.141.240:8080/api/v1/prescriptions/detail-medical-record/${medicalDetailId}`);
         if (res.data && res.data.length > 0) {
             const prescriptionId = res.data[0]._id;
             if (prescriptionId) {
@@ -58,7 +58,7 @@ function MedicalRecordContent() {
     };
 
     const fetchMedicationByPrescriptionId = async (prescriptionId: string) => {
-        const res = await axios.get(`http://localhost:8080/api/v1/prescription-details/prescription/${prescriptionId}`);
+        const res = await axios.get(`http://13.211.141.240:8080/api/v1/prescription-details/prescription/${prescriptionId}`);
         setPrescriptions(res.data);
     }
 

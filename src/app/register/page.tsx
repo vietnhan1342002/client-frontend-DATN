@@ -125,7 +125,7 @@ export default function RegisterPage() {
 
     const fetchRegister = async () => {
         try {
-            await axios.post('http://localhost:8080/api/v1/user-auth/register', {
+            await axios.post('http://13.211.141.240:8080/api/v1/user-auth/register', {
                 password: formRegister.password,
                 fullName: formRegister.fullName,
                 phoneNumber: formRegister.phoneNumber,

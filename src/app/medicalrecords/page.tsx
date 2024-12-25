@@ -43,7 +43,7 @@ export default function MedicalRecordsPage() {
 
     const fetchMedicalrecord = async (patientId: string) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/filter/medical_records?patientId=${patientId}`)
+            const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/medical_records?patientId=${patientId}`)
             const medicalRecords = response.data;
             const extractedPatientId = medicalRecords.map((record: any) => record.patientId.userId.fullName);
             setFormData(medicalRecords)

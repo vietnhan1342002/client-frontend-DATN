@@ -65,7 +65,7 @@ export default function Navbar() {
 
     const fetchDepartments = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/v1/departments");
+            const response = await axios.get("http://13.211.141.240:8080/api/v1/departments");
             const departmentsData = response.data.result || [];
             departmentsData.forEach((department: { departmentName: string }) => { });
 

@@ -20,17 +20,12 @@ export default function Footer() {
                         <h3 className="text-xl font-semibold mb-4">Important Links</h3>
                         <ul className="space-y-3">
                             <li>
-                                <a href="/appointment" className="hover:text-blue-200">
-                                    Appointment
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/doctors" className="hover:text-blue-200">
+                                <a href="/doctor" className="hover:text-blue-200">
                                     Doctors
                                 </a>
                             </li>
                             <li>
-                                <a href="/services" className="hover:text-blue-200">
+                                <a href="/service" className="hover:text-blue-200">
                                     Services
                                 </a>
                             </li>

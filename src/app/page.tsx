@@ -32,7 +32,7 @@ export default function Home() {
   const fetchServices = async () => {
     dispatch(setServiceLoading(true));
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/specialties?pageSize=30');
+      const response = await axios.get('http://13.211.141.240:8080/api/v1/specialties?pageSize=30');
       const serviceList = response.data.result;
       dispatch(setServices(serviceList));
     } catch (err) {
@@ -45,7 +45,7 @@ export default function Home() {
   const fetchDoctors = async () => {
     dispatch(setDoctorLoading(true));
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/doctors');
+      const response = await axios.get('http://13.211.141.240:8080/api/v1/doctors');
       const doctorList = response.data.result;
       dispatch(setDoctors(doctorList));
     } catch (err) {

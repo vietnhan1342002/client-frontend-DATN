@@ -26,12 +26,12 @@ export default function LoginPage() {
 
     const fetchLogin = async () => {
         try {
-            const res = await axios.post(`http://13.211.141.240:8080/api/v1/user-auth/login`, {
+            const res = await axios.post(`https://13.211.141.240.nip.io/api/v1/user-auth/login`, {
                 phoneNumber: formLogin.phoneNumber,
                 password: formLogin.password
             });
 
-            const patientId = await axios.get(`http://13.211.141.240:8080/api/v1/patients/user/${res.data.userId}`)
+            const patientId = await axios.get(`https://13.211.141.240.nip.io/api/v1/patients/user/${res.data.userId}`)
 
             if (res.data) {
                 localStorage.setItem('accessToken', res.data.accessToken)

@@ -40,7 +40,7 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
 
     const fetchServiceData = async () => {
         try {
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/specialties?departmentId=${departmentId}`);
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/specialties?departmentId=${departmentId}`);
             setServiceData(response.data);
             if (response.data && response.data.length > 0) {
                 handleSelectService(response.data[0]._id); // Mặc định chọn dịch vụ đầu tiên
@@ -60,10 +60,10 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
             setDoctorDetail([]);
             setNoDoctors(false);
 
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/specialties/${serviceId}`);
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/specialties/${serviceId}`);
             setServiceDetailData(response.data);
 
-            const doctorResponse = await axios.get(`http://13.211.141.240:8080/api/v1/filter/specialties/doctors?specialtyId=${serviceId}`);
+            const doctorResponse = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/specialties/doctors?specialtyId=${serviceId}`);
             const doctors = doctorResponse.data;
 
             if (Array.isArray(doctors) && doctors.length === 0) {

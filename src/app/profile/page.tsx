@@ -32,7 +32,7 @@ export default function PatientProfile() {
 
     const fetchPatient = async (patientId: string) => {
         try {
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/patients/${patientId}`);
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/patients/${patientId}`);
             const patient = response.data;
             if (patient.dateOfBirth) {
                 const formattedDate = patient.dateOfBirth.split('T')[0];
@@ -86,7 +86,7 @@ export default function PatientProfile() {
 
     const fetchUpdatePatient = async (patientId: string) => {
         try {
-            const res = await axios.patch(`http://13.211.141.240:8080/api/v1/patients/${patientId}`, {
+            const res = await axios.patch(`https://13.211.141.240.nip.io/api/v1/patients/${patientId}`, {
                 patient: {
                     dateOfBirth: submittedData.dateOfBirth,
                     address: submittedData.address,

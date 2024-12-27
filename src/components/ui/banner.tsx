@@ -119,8 +119,8 @@ export default function Banner() {
 
     const fetchDoctorBySpecialtyId = async (specialtyId: string) => {
         try {
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`);
-            // const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`)
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`);
+            // const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/specialties/doctors?specialtyId=${specialtyId}`)
 
             if (response.data) {
                 setFilteredDoctors(response.data)
@@ -133,8 +133,8 @@ export default function Banner() {
 
     const fetchScheduleByDoctorId = async (doctorId: string, date: string, shiftId: string) => {
         try {
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active&shiftId=${shiftId}`);
-            // const response = await axios.get(`http://13.211.141.240:8080/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active`);
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active&shiftId=${shiftId}`);
+            // const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/doctor-schedules?date=${date}&doctorId=${doctorId}&status=active`);
 
             if (response.data) {
                 setFilteredDates(response.data)
@@ -210,9 +210,9 @@ export default function Banner() {
     // Hàm tạo lịch hẹn cho bệnh nhân hiện tại
     const handleAppointment = async (patientId: string) => {
         try {
-            const patient = await axios.get(`http://13.211.141.240:8080/api/v1/patients/${patientId}`);
+            const patient = await axios.get(`https://13.211.141.240.nip.io/api/v1/patients/${patientId}`);
 
-            const appointment = await axios.post('http://13.211.141.240:8080/api/v1/appointments/', {
+            const appointment = await axios.post('https://13.211.141.240.nip.io/api/v1/appointments/', {
                 patientId: patient.data._id,
                 doctorId: selectedDoctor,
                 doctorScheduleId: doctorScheduleId
@@ -230,16 +230,16 @@ export default function Banner() {
     // Hàm tạo tài khoản người dùng mới và đặt lịch hẹn
     const handleRegistrationAndAppointment = async () => {
         try {
-            const user = await axios.post('http://13.211.141.240:8080/api/v1/user-auth/register', {
+            const user = await axios.post('https://13.211.141.240.nip.io/api/v1/user-auth/register', {
                 fullName: formData.name,
                 phoneNumber: formData.phone,
                 email: formData.email,
                 password: formData.phone
             });
 
-            const patient = await axios.get(`http://13.211.141.240:8080/api/v1/patients/user/${user.data._id}`);
+            const patient = await axios.get(`https://13.211.141.240.nip.io/api/v1/patients/user/${user.data._id}`);
 
-            const appointment = await axios.post('http://13.211.141.240:8080/api/v1/appointments/', {
+            const appointment = await axios.post('https://13.211.141.240.nip.io/api/v1/appointments/', {
                 patientId: patient.data,
                 doctorId: selectedDoctor,
                 doctorScheduleId: doctorScheduleId
@@ -259,7 +259,7 @@ export default function Banner() {
 
     // Hàm lấy chi tiết lịch hẹn
     const getAppointmentDetail = async (appointmentId: string) => {
-        const response = await axios.get(`http://13.211.141.240:8080/api/v1/appointments/${appointmentId}`);
+        const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/appointments/${appointmentId}`);
         return response.data.result.appointmentDate;
     };
 

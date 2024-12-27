@@ -24,7 +24,7 @@ export default function Doctor() {
 
     const fetchDoctors = async () => {
         try {
-            const response = await axios.get(`http://13.211.141.240:8080/api/v1/doctors?current=${currentPage}&pageSize=${pageSize}`);
+            const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/doctors?current=${currentPage}&pageSize=${pageSize}`);
             const { result, totalPages } = response.data;
             const doctorList = result;
             setDoctors(doctorList);

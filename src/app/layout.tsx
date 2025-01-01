@@ -4,6 +4,7 @@ import "./globals.css";
 
 import StoreProvider from "@/components/ui/StoreProvider";
 import Navbar from "@/components/ui/navbar";
+import ChatBox from "@/components/ui/chatbox";
 
 
 const geistSans = localFont({
@@ -37,6 +38,7 @@ export default function RootLayout({
           <div className="pt-[180px] lg:pt-[60px]"> {/* Padding-top 180px trên điện thoại, 60px trên màn hình lớn */}
             {children}
           </div>
+          <ChatBox />
         </StoreProvider>
       </body>
     </html>

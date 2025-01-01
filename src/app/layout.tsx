@@ -34,12 +34,10 @@ export default function RootLayout({
           <div className="fixed top-0 w-full z-50">
             <Navbar />
           </div>
-          <div className="pt-[<height-of-navbar>]">
+          <div className="pt-[180px] lg:pt-[60px]"> {/* Padding-top 180px trên điện thoại, 60px trên màn hình lớn */}
             {children}
           </div>
         </StoreProvider>
-
-
       </body>
     </html>
   );

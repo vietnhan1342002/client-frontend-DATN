@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
-import { FaSignInAlt, FaUserCircle } from 'react-icons/fa';
+import { FaSignInAlt, FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';  // Thêm các icon hamburger và đóng
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -17,6 +17,7 @@ export default function Navbar() {
     const [isSpecialtyDropdownOpen, setSpecialtyDropdownOpen] = useState(false);
     const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string | null>(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);  // State cho mobile menu
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const profileDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -67,8 +68,6 @@ export default function Navbar() {
         try {
             const response = await axios.get("https://13.211.141.240.nip.io/api/v1/departments");
             const departmentsData = response.data.result || [];
-            departmentsData.forEach((department: { departmentName: string }) => { });
-
             dispatch(setDepartments(departmentsData));
         } catch (error) {
             console.error("Error fetching departments:", error);
@@ -115,7 +114,7 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    <nav className="flex gap-8 justify-center">
+                    <nav className="hidden md:flex gap-8 justify-center">
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={toggleSpecialtyDropdown}
@@ -202,8 +201,65 @@ export default function Navbar() {
                             )}
                         </div>
                     </div>
+
+                    {/* Hamburger Menu for Mobile */}
+                    <div className="md:hidden flex items-center" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        {isMobileMenuOpen ? <FaTimes size={24} className="text-white" /> : <FaBars size={24} className="text-white" />}
+                    </div>
                 </div>
             </div>
+
+            {/* Mobile Menu */}
+            {isMobileMenuOpen && (
+                <div className="md:hidden bg-blue-900 text-white p-4">
+                    <div className="flex flex-col gap-4">
+                        <a href="/doctor" className="hover:underline">Doctors</a>
+                        <a href="/about" className="hover:underline">About us</a>
+                        <div className="relative">
+                            <button
+                                onClick={toggleSpecialtyDropdown}
+                                className="flex items-center"
+                            >
+                                Specialty
+                                <svg
+                                    className={`w-4 h-4 ml-1 transition-transform ${isSpecialtyDropdownOpen ? 'rotate-180' : ''}`}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+
+                            {isSpecialtyDropdownOpen && (
+                                <div className="absolute bg-white text-black shadow-lg mt-2 py-2 rounded-md w-48 z-10">
+                                    {loading ? (
+                                        <p className="block px-4 py-2 text-gray-400">Loading specialties...</p>
+                                    ) : departments.length > 0 ? (
+                                        departments.map((department) => (
+                                            <button
+                                                key={department._id}
+                                                onClick={() => handleDepartmentSelect(department._id)}
+                                                className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                            >
+                                                {department.departmentName}
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <p className="block px-4 py-2 text-gray-400">No departments available</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 }

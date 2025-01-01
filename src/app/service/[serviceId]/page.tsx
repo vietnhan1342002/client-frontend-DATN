@@ -34,7 +34,7 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
         }
     });
     const [doctorDetail, setDoctorDetail] = useState<any[]>([]);
-    const [noDoctors, setNoDoctors] = useState<boolean>(false);  // State để kiểm tra xem có bác sĩ không
+    const [noDoctors, setNoDoctors] = useState<boolean>(false);
 
     const departmentId = params.serviceId;
 
@@ -43,7 +43,7 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
             const response = await axios.get(`https://13.211.141.240.nip.io/api/v1/filter/specialties?departmentId=${departmentId}`);
             setServiceData(response.data);
             if (response.data && response.data.length > 0) {
-                handleSelectService(response.data[0]._id); // Mặc định chọn dịch vụ đầu tiên
+                handleSelectService(response.data[0]._id);
             }
         } catch (err) {
             toast.error('Error fetching service data');
@@ -77,7 +77,6 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
         }
     };
 
-
     return (
         <div className="bg-gray-50 min-h-screen py-10 px-4">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
@@ -104,13 +103,12 @@ const ServiceDetail = ({ params }: { params: { serviceId: string } }) => {
                 <main className="w-full md:w-3/4 bg-white shadow-lg rounded-lg p-6 mx-auto">
                     {/* Image */}
                     <img
-                        src="/banner.jpg" // You can replace this with service-specific images if available
+                        src="/banner.jpg"
                         alt="Doctor and patient"
-                        className="w-full h-64 object-cover rounded-lg mb-6"
+                        className="w-full sm:h-48 md:h-64 lg:h-80 object-cover rounded-lg mb-6"
                         width={800}
                         height={400}
                     />
-
                     {/* Title */}
                     <h2 className="text-3xl font-bold text-blue-900 mb-6">{serviceDetailData.name}</h2>
 

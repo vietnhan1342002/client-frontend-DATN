@@ -23,13 +23,17 @@ export default function ChatBox() {
     useEffect(() => {
         scrollToBottom();
     }, [chatHistory]);
+    useEffect(() => {
+        console.log("Updated shiftList:", shiftList);
+    }, [shiftList]);
+
 
     const handleSendMessage = async () => {
         setMessage('');
         if (message.trim()) {
             setChatHistory((prev) => [...prev, { type: 'user', content: message }]);
-
             const botResponse = await fetchMessage(message);
+
             if (botResponse) {
                 setChatHistory((prev) => [...prev, { type: 'bot', content: botResponse.message }]);
                 if (botResponse.dateList?.length) {
@@ -49,6 +53,7 @@ export default function ChatBox() {
         ]);
         const botResponse = await fetchMessage(selectedDate);
         if (botResponse) {
+            setShiftList(botResponse.shiftList)
             setChatHistory((prev) => [
                 ...prev,
                 { type: 'bot', content: botResponse.message },
@@ -75,7 +80,8 @@ export default function ChatBox() {
     const fetchMessage = async (message: string): Promise<{ message: string; dateList: string[], shiftList: string[] }> => {
         try {
             const response = await axios.post(
-                'https://13.211.141.240.nip.io/api/v1/chat/message',
+                // 'https://13.211.141.240.nip.io/api/v1/chat/message',
+                'http://localhost:8080/api/v1/chat/message',
                 { message }
             );
             const data = response.data.response;

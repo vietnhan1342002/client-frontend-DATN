@@ -80,8 +80,8 @@ export default function ChatBox() {
     const fetchMessage = async (message: string): Promise<{ message: string; dateList: string[], shiftList: string[] }> => {
         try {
             const response = await axios.post(
-                // 'https://13.211.141.240.nip.io/api/v1/chat/message',
-                'http://localhost:8080/api/v1/chat/message',
+                'https://13.211.141.240.nip.io/api/v1/chat/message',
+                // 'http://localhost:8080/api/v1/chat/message',
                 { message }
             );
             const data = response.data.response;

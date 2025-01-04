@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 
 export default function MedicalRecordsPage() {
     const router = useRouter()
-    const userName = "ABD"
     const [patientId, setPatientId] = useState('')
     const initialMedicalData = [{
         patientId: {
@@ -61,7 +60,7 @@ export default function MedicalRecordsPage() {
     return (
         <PrivateRoute>
             <div className="container mx-auto px-6 py-8">
-                <h2 className="text-2xl font-bold text-blue-900 mb-6">{userName}&apos;s Medical Records</h2>
+                <h2 className="text-2xl font-bold text-blue-900 mb-6">Medical Records</h2>
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                     <table className="min-w-full border border-gray-200">
                         <thead className="bg-blue-100">

@@ -29,10 +29,10 @@ export default function Appointment() {
     };
 
     const [appointment, setAppointment] = useState(initialAppointment);
-    const searchParams = useSearchParams()
-    const id = searchParams.get('id')
 
     const fetchAppointment = async () => {
+        const searchParams = useSearchParams()
+        const id = searchParams.get('id')
         try {
             const res = await axios.get(`https://13.211.141.240.nip.io/api/v1/appointments/${id}`);
             setAppointment(res.data.result);

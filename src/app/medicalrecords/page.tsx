@@ -66,7 +66,6 @@ export default function MedicalRecordsPage() {
                         <thead className="bg-blue-100">
                             <tr>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Date</th>
-                                <th className="text-left px-6 py-3 text-gray-700 font-semibold">Patient Name</th>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Doctor Name</th>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Disease</th>
                                 <th className="text-left px-6 py-3 text-gray-700 font-semibold">Notes</th>
@@ -77,7 +76,6 @@ export default function MedicalRecordsPage() {
                             {formData.map((record, index) => (
                                 <tr key={record._id || index} className="border-t hover:bg-gray-100">
                                     <td className="px-6 py-4 text-gray-600">{record.appointmentId?.appointmentDate}</td>
-                                    <td className="px-6 py-4 text-gray-600">{record.patientId?.userId?.fullName}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.doctorId?.userId?.fullName}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.diagnosis}</td>
                                     <td className="px-6 py-4 text-gray-600">{record.note}</td>

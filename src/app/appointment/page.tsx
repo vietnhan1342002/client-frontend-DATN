@@ -5,6 +5,7 @@ import BannerDetail from "@/components/ui/bannerdetail";
 import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
 
@@ -28,15 +29,18 @@ export default function Appointment() {
     };
 
     const [appointment, setAppointment] = useState(initialAppointment);
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
 
     const fetchAppointment = async () => {
         try {
-            const res = await axios.get("https://13.211.141.240.nip.io/api/v1/appointments/674ff4882f0e9bce9578b73f");
+            const res = await axios.get(`https://13.211.141.240.nip.io/api/v1/appointments/${id}`);
             setAppointment(res.data.result);
         } catch (error) {
             console.error("Failed to fetch appointment:", error);
         }
     };
+
 
     const [date, time] = appointment.appointmentDate.split(" ");
 
@@ -111,32 +115,34 @@ export default function Appointment() {
                             </form>
                         </div>
                         {/* Right Side - Schedule Hours */}
-                        <div className="bg-blue-900 text-white shadow-lg rounded-lg p-8">
-                            <h2 className="text-2xl font-bold mb-4">Schedule Hours</h2>
-                            <div className="grid grid-cols-[auto_1fr_auto] gap-4 mb-4">
+                        <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-xl rounded-lg p-8">
+                            <h2 className="text-3xl font-extrabold mb-6 text-center">Schedule Hours</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-y-6 gap-x-4">
                                 {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, idx) => (
                                     <React.Fragment key={idx}>
-                                        <div>{day}</div>
-                                        <hr className="my-3 border-t border-white w-1/4 mx-auto" />
-                                        <div>{day === "Sunday" ? "Closed" : "09:00 AM - 07:00 PM"}</div>
+                                        <div className="font-medium">{day}</div>
+                                        <div className="flex items-center justify-center">
+                                            <hr className="border-t border-white w-2/3" />
+                                        </div>
+                                        <div className="font-semibold">{day === "Sunday" ? "Closed" : "09:00 AM - 07:00 PM"}</div>
                                     </React.Fragment>
                                 ))}
                             </div>
-                            <hr className="my-6 border-t border-white" />
-                            <div className="mt-6">
-                                <h3 className="text-xl font-semibold">Emergency</h3>
-                                <p className="flex items-center space-x-2 mt-2">
-                                    <FaPhoneAlt className="mr-1" />
-                                    <span>Call: 0123456789</span>
-                                </p>
-                                <p className="flex items-center space-x-2 mt-2">
-                                    <FaMapMarkerAlt className="mr-1" />
-                                    <span>Location: 123 Vo Chi Cong</span>
-                                </p>
-                                <p className="flex items-center space-x-2 mt-2">
-                                    <FaEnvelope className="mr-1" />
-                                    <span>Email: abc@gmail.com</span>
-                                </p>
+                            <hr className="my-8 border-t border-white/50" />
+                            <div className="mt-6 space-y-4">
+                                <h3 className="text-2xl font-semibold text-center">Emergency Contact</h3>
+                                <div className="flex items-center space-x-4">
+                                    <FaPhoneAlt className="text-xl" />
+                                    <span className="text-lg">Call: <a href="tel:0123456789" className="underline">0123456789</a></span>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <FaMapMarkerAlt className="text-xl" />
+                                    <span className="text-lg">Location: <a href="https://goo.gl/maps/example" target="_blank" className="underline">123 Vo Chi Cong</a></span>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <FaEnvelope className="text-xl" />
+                                    <span className="text-lg">Email: <a href="mailto:abc@gmail.com" className="underline">abc@gmail.com</a></span>
+                                </div>
                             </div>
                         </div>
                     </div>
